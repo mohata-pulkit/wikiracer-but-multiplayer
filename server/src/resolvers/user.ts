@@ -64,6 +64,12 @@ class FieldError {
 }
 
 @ObjectType()
+export class AuthToken {
+	@Field(() => Int, { nullable: true })
+	id?: number;
+}
+
+@ObjectType()
 class UserResponse {
 	@Field(() => [FieldError], { nullable: true })
 	errors?: FieldError[];
@@ -74,8 +80,11 @@ class UserResponse {
 
 @ObjectType()
 class LoginResponse {
-	@Field()
+	@Field(() => String, { nullable: true })
 	accesstoken?: string;
+
+	@Field(() => [FieldError], { nullable: true })
+	errors?: FieldError[];
 }
 
 export default class UserResolver {
@@ -162,52 +171,53 @@ export default class UserResolver {
 		const user = await em.findOne(User, whereQuery);
 		if (!user) {
 			return {
-				accesstoken: sign(
+				errors: [
 					{
-						errors: [
-							{
-								field: "usernameOrEmail",
-								message: "that username doesn't exist",
-							},
-						],
+						field: "usernameOrEmail",
+						message: "that username doesn't exist",
 					},
-					"hamrosianmaneavour"
-				),
+				],
 			};
 		}
 		const valid = await argon2.verify(user.password, options.password);
 		if (!valid) {
 			return {
-				accesstoken: sign(
+				errors: [
 					{
-						errors: [
-							{
-								field: "password",
-								message: "incorrect password",
-							},
-						],
+						field: "password",
+						message: "incorrect password",
 					},
-					"hamrosianmaneavour"
-				),
+				],
 			};
 		}
+
+		const authtoken = new AuthToken();
+
+		authtoken.id = user.id;
+
 		return {
 			accesstoken: sign(
 				{
-					user,
+					authtoken,
 				},
-				"hamrosianmaneavour"
+				"hamrosianmaneavour",
+				{
+					expiresIn: "1h",
+					issuer: "https://www.wikiracer.io",
+				}
 			),
 		};
 	}
 
-	@Query(() => Boolean)
+	@Query(() => AuthToken, { nullable: true })
 	@UseMiddleware(isAuth)
-	async authenticateUser(@Ctx() payload: MyContext): Promise<Boolean> {
+	async authenticateUser(
+		@Ctx() payload: MyContext
+	): Promise<AuthToken | undefined> {
 		if (payload === null) {
-			return false;
+			return undefined;
 		} else {
-			return true;
+			return payload.payload;
 		}
 	}
 }
