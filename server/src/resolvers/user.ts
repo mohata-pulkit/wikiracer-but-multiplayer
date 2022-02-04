@@ -66,7 +66,7 @@ class FieldError {
 @ObjectType()
 export class AuthToken {
 	@Field(() => Int, { nullable: true })
-	id?: number;
+	uuid?: string;
 }
 
 @ObjectType()
@@ -93,36 +93,47 @@ export default class UserResolver {
 		return em.find(User, {});
 	}
 
-	@Query(() => User, { nullable: true })
-	user(
-		@Arg("id", () => Int) id: number,
-		@Ctx() { em }: MyContext
-	): Promise<User | null> {
-		return em.findOne(User, { id });
+	@Query(() => UserResponse, { nullable: true })
+	user(@Arg("uuid", () => String) uuid: string, @Ctx() { em }: MyContext) {
+		const user = em.findOne(User, { uuid });
+
+		if (!user) {
+			const response = new UserResponse();
+			response.errors = [
+				{
+					field: "id",
+					message: "no such user found",
+				},
+			];
+
+			return response;
+		}
+
+		return {
+			user: user,
+		};
 	}
 
-	@Mutation(() => UserResponse, { nullable: true })
+	@Mutation(() => LoginResponse, { nullable: true })
 	async createUser(
 		@Arg("options", () => createUserInput)
 		options: createUserInput,
 		@Ctx()
 		{ em }: MyContext
-	): Promise<UserResponse> {
-		const errors = validateRegister(options);
+	): Promise<LoginResponse> {
+		var errors = validateRegister(options);
 
 		const preexistingUsername = await em.findOne(User, {
 			username: options.username,
 		});
 
 		if (preexistingUsername) {
-			return {
-				errors: [
-					{
-						field: "username",
-						message: "that username is already taken",
-					},
-				],
-			};
+			errors = [
+				{
+					field: "username",
+					message: "that username is already taken",
+				},
+			];
 		}
 
 		const preexistingEmail = await em.findOne(User, {
@@ -130,31 +141,47 @@ export default class UserResolver {
 		});
 
 		if (preexistingEmail) {
-			return {
-				errors: [
-					{
-						field: "email",
-						message: "an account with that email already exists",
-					},
-				],
-			};
+			errors = [
+				{
+					field: "email",
+					message: "an account with that email already exists",
+				},
+			];
 		}
 
-		const hash = await argon2.hash(options.password);
+		if (!errors) {
+			const hash = await argon2.hash(options.password);
 
-		const user = em.create(User, {
-			username: options.username,
-			password: hash,
-			email: options.email,
-		});
-		await em.persistAndFlush(user);
+			const user = em.create(User, {
+				username: options.username,
+				password: hash,
+				email: options.email,
+			});
+			await em.persistAndFlush(user);
 
-		return {
-			user: user,
-			errors: errors,
-		};
+			const authtoken = new AuthToken();
+
+			authtoken.uuid = user.uuid;
+
+			return {
+				accesstoken: sign(
+					{
+						authtoken,
+					},
+					"hamrosianmaneavour",
+					{
+						expiresIn: "1h",
+						issuer: "https://www.wikiracer.io",
+					}
+				),
+			};
+		} else {
+			return {
+				errors: errors,
+			};
+		}
 	}
-	@Query(() => LoginResponse, { nullable: true })
+	@Mutation(() => LoginResponse, { nullable: true })
 	async loginUser(
 		@Arg("options", () => loginUserInput)
 		options: loginUserInput,
@@ -193,7 +220,7 @@ export default class UserResolver {
 
 		const authtoken = new AuthToken();
 
-		authtoken.id = user.id;
+		authtoken.uuid = user.uuid;
 
 		return {
 			accesstoken: sign(
@@ -218,6 +245,25 @@ export default class UserResolver {
 			return undefined;
 		} else {
 			return payload.payload;
+		}
+	}
+
+	@Query(() => User, { nullable: true })
+	@UseMiddleware(isAuth)
+	async userFromToken(@Ctx() payload: MyContext): Promise<User | null> {
+		if (payload === null) {
+			var user = new User();
+			user.username = "bruh";
+			user.email = "hella";
+			user.createdAt = new Date();
+			user.updatedAt = new Date();
+			user.password = "cringe";
+
+			return user;
+		} else {
+			const uuid = payload.payload?.uuid;
+			const user = await payload.em.findOne(User, { uuid });
+			return user;
 		}
 	}
 }

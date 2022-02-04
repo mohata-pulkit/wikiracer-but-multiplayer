@@ -1,12 +1,13 @@
 import { Entity, Property, PrimaryKey, BigIntType } from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
+import { v4 } from "uuid";
 
 @ObjectType()
 @Entity()
 export class User {
-	@Field(() => Int)
-	@PrimaryKey()
-	id: number;
+	@Field(() => String)
+	@PrimaryKey({ type: "text" })
+	uuid = v4();
 
 	@Field(() => String)
 	@Property({ type: "date" })

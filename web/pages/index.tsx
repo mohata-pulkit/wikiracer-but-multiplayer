@@ -1,13 +1,15 @@
-import { Anchor, Box, Heading, Paragraph } from 'grommet'
+import type { NextPage } from "next";
+import { useUserFromTokenQuery } from "../generated/graphql";
 
-export default function Home() {
-  return (
-    <Box align="center" margin="large">
-      <Heading>Grommet is awesome!</Heading>
-      <Paragraph>
-        Find out more at{' '}
-        <Anchor href="https://v2.grommet.io/">https://v2.grommet.io/</Anchor>
-      </Paragraph>
-    </Box>
-  )
-}
+const Home: NextPage = () => {
+	const [{ data }] = useUserFromTokenQuery();
+	return (
+		<div>
+			<p>{data?.userFromToken?.username}</p>
+			<p>{data?.userFromToken?.elo}</p>
+			<p>{data?.userFromToken?.email}</p>
+		</div>
+	);
+};
+
+export default Home;

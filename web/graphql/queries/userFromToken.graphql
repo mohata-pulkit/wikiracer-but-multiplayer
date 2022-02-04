@@ -1,0 +1,8 @@
+query userFromToken {
+	userFromToken {
+		uuid
+		username
+		email
+		elo
+	}
+}
