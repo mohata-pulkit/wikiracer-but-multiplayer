@@ -17,7 +17,8 @@ export type Scalars = {
 
 export type AuthToken = {
   __typename?: 'AuthToken';
-  uuid?: Maybe<Scalars['Int']>;
+  uuidLobby?: Maybe<Scalars['String']>;
+  uuidUser?: Maybe<Scalars['String']>;
 };
 
 export type FieldError = {
@@ -26,21 +27,45 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type Lobby = {
+  __typename?: 'Lobby';
+  createdAt: Scalars['String'];
+  endArticle: Scalars['String'];
+  options: Array<Scalars['String']>;
+  startArticle: Scalars['String'];
+  users: Array<Scalars['String']>;
+  uuid: Scalars['String'];
+};
+
+export type LobbyResponse = {
+  __typename?: 'LobbyResponse';
+  accesstoken?: Maybe<Scalars['String']>;
+  error?: Maybe<Scalars['String']>;
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   accesstoken?: Maybe<Scalars['String']>;
   errors?: Maybe<Array<FieldError>>;
+  user?: Maybe<User>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createLobby: LobbyResponse;
   createUser?: Maybe<LoginResponse>;
+  joinLobby: LobbyResponse;
   loginUser?: Maybe<LoginResponse>;
 };
 
 
 export type MutationCreateUserArgs = {
   options: CreateUserInput;
+};
+
+
+export type MutationJoinLobbyArgs = {
+  uuid: Scalars['String'];
 };
 
 
@@ -51,9 +76,17 @@ export type MutationLoginUserArgs = {
 export type Query = {
   __typename?: 'Query';
   authenticateUser?: Maybe<AuthToken>;
+  lobbies: Array<Lobby>;
+  lobby: Lobby;
+  lobbyFromToken?: Maybe<Lobby>;
   user?: Maybe<UserResponse>;
   userFromToken?: Maybe<User>;
   users: Array<User>;
+};
+
+
+export type QueryLobbyArgs = {
+  uuid: Scalars['String'];
 };
 
 
@@ -92,7 +125,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', loginUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, user?: { __typename?: 'User', uuid: string, username: string, email: string, elo: number } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   username: Scalars['String'];
@@ -101,7 +134,12 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, user?: { __typename?: 'User', uuid: string, username: string, email: string, elo: number } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
+
+export type LobbyFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LobbyFromTokenQuery = { __typename?: 'Query', lobbyFromToken?: { __typename?: 'Lobby', uuid: string, users: Array<string> } | null };
 
 export type UserFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -113,6 +151,12 @@ export const LoginUserDocument = gql`
     mutation loginUser($options: loginUserInput!) {
   loginUser(options: $options) {
     accesstoken
+    user {
+      uuid
+      username
+      email
+      elo
+    }
     errors {
       field
       message
@@ -128,6 +172,12 @@ export const CreateUserDocument = gql`
     mutation createUser($username: String!, $password: String!, $email: String!) {
   createUser(options: {username: $username, password: $password, email: $email}) {
     accesstoken
+    user {
+      uuid
+      username
+      email
+      elo
+    }
     errors {
       field
       message
@@ -138,6 +188,18 @@ export const CreateUserDocument = gql`
 
 export function useCreateUserMutation() {
   return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
+};
+export const LobbyFromTokenDocument = gql`
+    query lobbyFromToken {
+  lobbyFromToken {
+    uuid
+    users
+  }
+}
+    `;
+
+export function useLobbyFromTokenQuery(options?: Omit<Urql.UseQueryArgs<LobbyFromTokenQueryVariables>, 'query'>) {
+  return Urql.useQuery<LobbyFromTokenQuery>({ query: LobbyFromTokenDocument, ...options });
 };
 export const UserFromTokenDocument = gql`
     query userFromToken {

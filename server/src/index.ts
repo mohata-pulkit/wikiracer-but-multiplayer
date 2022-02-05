@@ -6,6 +6,8 @@ import { buildSchema } from "type-graphql";
 import UserResolver from "./resolvers/user";
 import { MikroORM } from "@mikro-orm/core";
 import mikroOrmConfig from "./mikro-orm.config";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import LobbyResolver from "./resolvers/lobby";
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroOrmConfig);
@@ -14,12 +16,12 @@ const main = async () => {
 	const app = express();
 
 	app.listen(4000, () => {
-		console.log("server started on localhost:4000");
+		console.log("server started on http://localhost:4000");
 	});
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
-			resolvers: [UserResolver],
+			resolvers: [UserResolver, LobbyResolver],
 			validate: false,
 		}),
 		context: ({ req }) => {
@@ -30,6 +32,7 @@ const main = async () => {
 			};
 			return context;
 		},
+		plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 	});
 	await apolloServer.start();
 	apolloServer.applyMiddleware({ app });

@@ -1,0 +1,6 @@
+query lobbyFromToken {
+	lobbyFromToken {
+		uuid
+		users
+	}
+}

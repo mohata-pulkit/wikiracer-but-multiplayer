@@ -3,6 +3,12 @@ mutation createUser($username: String!, $password: String!, $email: String!) {
 		options: { username: $username, password: $password, email: $email }
 	) {
 		accesstoken
+		user {
+			uuid
+			username
+			email
+			elo
+		}
 		errors {
 			field
 			message

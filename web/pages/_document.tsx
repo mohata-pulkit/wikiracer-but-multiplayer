@@ -1,4 +1,8 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import {
+	useLobbyFromTokenQuery,
+	useUserFromTokenQuery,
+} from "../generated/graphql";
 
 class MyDocument extends Document {
 	render() {

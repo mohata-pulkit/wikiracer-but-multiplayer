@@ -3,17 +3,17 @@ import { isAuth } from "../isAuth";
 import {
 	Arg,
 	Ctx,
-	Int,
 	Mutation,
 	ObjectType,
 	Query,
 	Field,
 	UseMiddleware,
 } from "type-graphql";
-import { MyContext } from "src/types";
+import { MyContext } from "../types";
 import { loginUserInput, createUserInput } from "./UsernamePasswordInput";
 import * as argon2 from "argon2";
 import { sign } from "jsonwebtoken";
+import { AuthToken } from "./AuthToken";
 
 const validateRegister = (options: createUserInput) => {
 	if (!options.email.includes("@")) {
@@ -64,12 +64,6 @@ class FieldError {
 }
 
 @ObjectType()
-export class AuthToken {
-	@Field(() => Int, { nullable: true })
-	uuid?: string;
-}
-
-@ObjectType()
 class UserResponse {
 	@Field(() => [FieldError], { nullable: true })
 	errors?: FieldError[];
@@ -85,6 +79,9 @@ class LoginResponse {
 
 	@Field(() => [FieldError], { nullable: true })
 	errors?: FieldError[];
+
+	@Field(() => User, { nullable: true })
+	user?: User;
 }
 
 export default class UserResolver {
@@ -161,7 +158,7 @@ export default class UserResolver {
 
 			const authtoken = new AuthToken();
 
-			authtoken.uuid = user.uuid;
+			authtoken.uuidUser = user.uuid;
 
 			return {
 				accesstoken: sign(
@@ -174,6 +171,7 @@ export default class UserResolver {
 						issuer: "https://www.wikiracer.io",
 					}
 				),
+				user: user,
 			};
 		} else {
 			return {
@@ -220,7 +218,7 @@ export default class UserResolver {
 
 		const authtoken = new AuthToken();
 
-		authtoken.uuid = user.uuid;
+		authtoken.uuidUser = user.uuid;
 
 		return {
 			accesstoken: sign(
@@ -233,36 +231,30 @@ export default class UserResolver {
 					issuer: "https://www.wikiracer.io",
 				}
 			),
+			user: user,
 		};
 	}
 
 	@Query(() => AuthToken, { nullable: true })
 	@UseMiddleware(isAuth)
 	async authenticateUser(
-		@Ctx() payload: MyContext
+		@Ctx() context: MyContext
 	): Promise<AuthToken | undefined> {
-		if (payload === null) {
+		if (context.payload === null) {
 			return undefined;
 		} else {
-			return payload.payload;
+			return context.payload;
 		}
 	}
 
 	@Query(() => User, { nullable: true })
 	@UseMiddleware(isAuth)
-	async userFromToken(@Ctx() payload: MyContext): Promise<User | null> {
-		if (payload === null) {
-			var user = new User();
-			user.username = "bruh";
-			user.email = "hella";
-			user.createdAt = new Date();
-			user.updatedAt = new Date();
-			user.password = "cringe";
-
-			return user;
+	async userFromToken(@Ctx() context: MyContext): Promise<User | null> {
+		if (context.payload === null) {
+			return null;
 		} else {
-			const uuid = payload.payload?.uuid;
-			const user = await payload.em.findOne(User, { uuid });
+			const uuid = context.payload?.uuidUser;
+			const user = await context.em.findOne(User, { uuid });
 			return user;
 		}
 	}

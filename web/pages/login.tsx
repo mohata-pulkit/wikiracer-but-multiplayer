@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as graphql from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { setCookies } from "cookies-next";
+import { useRouter } from "next/router";
 
 interface registerProps {}
 
 const login: React.FC<registerProps> = ({}) => {
 	const [, loginUser] = graphql.useLoginUserMutation();
+	const router = useRouter();
 	return (
 		<Formik
 			initialValues={{ usernameOrEmail: "", password: "" }}
@@ -20,11 +22,13 @@ const login: React.FC<registerProps> = ({}) => {
 				});
 				if (response.data?.loginUser?.errors) {
 					setErrors(toErrorMap(response.data.loginUser.errors));
+				} else {
+					setCookies(
+						"accessToken",
+						response.data?.loginUser?.accesstoken
+					);
+					router.push("/");
 				}
-				setCookies(
-					"accessToken",
-					response.data?.loginUser?.accesstoken
-				);
 			}}
 		>
 			{({ errors }) => (

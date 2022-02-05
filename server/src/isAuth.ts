@@ -1,6 +1,6 @@
 import { verify } from "jsonwebtoken";
 import { MiddlewareFn } from "type-graphql";
-import { AuthToken } from "./resolvers/user";
+import { AuthToken } from "./resolvers/AuthToken";
 import { MyContext } from "./types";
 
 export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
@@ -15,7 +15,8 @@ export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
 			complete: true,
 		}).payload;
 		context.payload = {
-			uuid: (<any>payload).authtoken.uuid,
+			uuidUser: (<any>payload).authtoken.uuidUser,
+			uuidLobby: (<any>payload).authtoken.uuidLobby,
 		} as AuthToken;
 		console.log(payload);
 	} catch (err) {

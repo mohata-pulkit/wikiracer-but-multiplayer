@@ -1,6 +1,12 @@
 mutation loginUser($options: loginUserInput!) {
 	loginUser(options: $options) {
 		accesstoken
+		user {
+			uuid
+			username
+			email
+			elo
+		}
 		errors {
 			field
 			message
