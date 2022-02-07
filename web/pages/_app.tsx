@@ -13,12 +13,7 @@ import {
 } from "../generated/graphql";
 
 import { createClient, dedupExchange, fetchExchange, Provider } from "urql";
-import {
-	Cache,
-	cacheExchange,
-	query,
-	QueryInput,
-} from "@urql/exchange-graphcache";
+import { Cache, cacheExchange, QueryInput } from "@urql/exchange-graphcache";
 import { Layout } from "./components/layout";
 
 function betterUpdateQuery<Result, Query>(
@@ -32,49 +27,62 @@ function betterUpdateQuery<Result, Query>(
 
 const client = createClient({
 	url: "http://localhost:4000/graphql",
+	fetchOptions: () => {
+		const token = getCookie("accessToken");
+		return {
+			headers: { authorization: token ? `Bearer ${token}` : "" },
+			credentials: "include",
+		};
+	},
 	exchanges: [
 		dedupExchange,
 		cacheExchange({
-			keys: {
-				User: () => null,
-			},
 			updates: {
 				Mutation: {
-					login: (result, args, cache, info) => {
+					loginUser: (_result, args, cache, info) => {
 						betterUpdateQuery<
 							LoginUserMutation,
 							UserFromTokenQuery
 						>(
 							cache,
 							{ query: UserFromTokenDocument },
-							result,
-							(_result, query) => {
-								console.log(_result);
-								if (_result.loginUser?.errors) {
-									return query;
+							_result,
+							(result, query) => {
+								if (result.loginUser) {
+									if (result.loginUser.errors) {
+										return query;
+									} else {
+										return {
+											userFromToken:
+												result.loginUser.user,
+										};
+									}
 								} else {
-									return {
-										userFromToken: _result.loginUser?.user,
-									};
+									return query;
 								}
 							}
 						);
 					},
-					register: (result, args, cache, info) => {
+					createUser: (_result, args, cache, info) => {
 						betterUpdateQuery<
 							CreateUserMutation,
 							UserFromTokenQuery
 						>(
 							cache,
 							{ query: UserFromTokenDocument },
-							result,
-							(_result, query) => {
-								if (_result.createUser?.errors) {
-									return query;
+							_result,
+							(result, query) => {
+								if (result.createUser) {
+									if (result.createUser.errors) {
+										return query;
+									} else {
+										return {
+											userFromToken:
+												result.createUser.user,
+										};
+									}
 								} else {
-									return {
-										userFromToken: _result.createUser?.user,
-									};
+									return query;
 								}
 							}
 						);
@@ -84,12 +92,6 @@ const client = createClient({
 		}),
 		fetchExchange,
 	],
-	fetchOptions: () => {
-		const token = getCookie("accessToken");
-		return {
-			headers: { authorization: token ? `Bearer ${token}` : "" },
-		};
-	},
 });
 
 function MyApp({ Component, pageProps }: AppProps) {

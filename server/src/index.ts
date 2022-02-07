@@ -8,6 +8,7 @@ import { MikroORM } from "@mikro-orm/core";
 import mikroOrmConfig from "./mikro-orm.config";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import LobbyResolver from "./resolvers/lobby";
+import cors from "cors";
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroOrmConfig);
@@ -18,6 +19,13 @@ const main = async () => {
 	app.listen(4000, () => {
 		console.log("server started on http://localhost:4000");
 	});
+
+	app.use(
+		cors({
+			origin: "http://localhost:3000",
+			credentials: true,
+		})
+	);
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
@@ -35,7 +43,7 @@ const main = async () => {
 		plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 	});
 	await apolloServer.start();
-	apolloServer.applyMiddleware({ app });
+	apolloServer.applyMiddleware({ app, cors: false });
 };
 
 main();

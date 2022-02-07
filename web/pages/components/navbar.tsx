@@ -17,10 +17,18 @@ const Navbar: NextPage = () => {
 
 	return (
 		<nav className="flex gap-8 p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900 font-medium font-serif">
-			<div className="p-2">WikiRacer</div>
+			<div className="p-2 font-black text-2xl">
+				<Link href="/">WikiRacer</Link>
+			</div>
 			<div className="flex gap-4 ml-auto">
-				<div className="p-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md">
-					<Link href={data?.userFromToken?.username ? "/" : "/login"}>
+				<div className="p-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg">
+					<Link
+						href={
+							data?.userFromToken?.username
+								? "/account"
+								: "/login"
+						}
+					>
 						{data?.userFromToken?.username
 							? data.userFromToken?.username
 							: "Login"}

@@ -31,12 +31,17 @@ export const createUrqlClient = (ssrExchange: any) => ({
 							{ query: UserFromTokenDocument },
 							_result,
 							(result, query) => {
-								if (result.loginUser?.errors) {
-									return query;
+								if (result.loginUser) {
+									if (result.loginUser.errors) {
+										return query;
+									} else {
+										return {
+											userFromToken:
+												result.loginUser?.user,
+										};
+									}
 								} else {
-									return {
-										userFromToken: result.loginUser?.user,
-									};
+									return query;
 								}
 							}
 						);

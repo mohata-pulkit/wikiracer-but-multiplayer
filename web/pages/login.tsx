@@ -4,10 +4,9 @@ import * as graphql from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
+import { NextPage } from "next";
 
-interface registerProps {}
-
-const login: React.FC<registerProps> = ({}) => {
+const login: NextPage = () => {
 	const [, loginUser] = graphql.useLoginUserMutation();
 	const router = useRouter();
 	return (
