@@ -29,7 +29,7 @@ const validateRegister = (options: createUserInput) => {
 		return [
 			{
 				field: "username",
-				message: "length must be greater than 2",
+				message: "too short",
 			},
 		];
 	}
@@ -47,7 +47,25 @@ const validateRegister = (options: createUserInput) => {
 		return [
 			{
 				field: "password",
-				message: "length must be greater than 2",
+				message: "too short",
+			},
+		];
+	}
+
+	if (options.password.length >= 12) {
+		return [
+			{
+				field: "password",
+				message: "too long",
+			},
+		];
+	}
+
+	if (options.username.length <= 12) {
+		return [
+			{
+				field: "username",
+				message: "too long",
 			},
 		];
 	}
@@ -232,6 +250,81 @@ export default class UserResolver {
 				}
 			),
 			user: user,
+		};
+	}
+
+	@Mutation(() => LoginResponse, { nullable: true })
+	@UseMiddleware(isAuth)
+	async editUser(
+		@Arg("options", () => createUserInput)
+		options: createUserInput,
+		@Ctx()
+		context: MyContext
+	): Promise<LoginResponse> {
+		var errors = validateRegister(options);
+
+		if (options.password === "") {
+			errors = [
+				{
+					field: "password",
+					message: "please enter a new password",
+				},
+			];
+		}
+
+		if (context.payload === null) {
+			errors = [
+				{
+					field: "username",
+					message:
+						"please login before trying to change account details",
+				},
+			];
+		}
+		const uuid = context.payload?.uuidUser;
+		const oldUser = await context.em.findOne(User, { uuid });
+		if (!errors) {
+			const hash = await argon2.hash(options.password);
+
+			const user = await context.em.findOne(User, {
+				uuid: oldUser?.uuid,
+			});
+
+			if (user) {
+				user.username = options.username;
+				user.password = hash;
+				user.email = options.email;
+
+				await context.em.persistAndFlush(user);
+
+				const authtoken = new AuthToken();
+
+				authtoken.uuidUser = user.uuid;
+
+				return {
+					accesstoken: sign(
+						{
+							authtoken,
+						},
+						"hamrosianmaneavour",
+						{
+							expiresIn: "1h",
+							issuer: "https://www.wikiracer.io",
+						}
+					),
+					user: user,
+				};
+			} else {
+				errors = [
+					{
+						field: "username",
+						message: "couldn't find a user with that username",
+					},
+				];
+			}
+		}
+		return {
+			errors: errors,
 		};
 	}
 

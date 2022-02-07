@@ -54,12 +54,18 @@ export type Mutation = {
   __typename?: 'Mutation';
   createLobby: LobbyResponse;
   createUser?: Maybe<LoginResponse>;
+  editUser?: Maybe<LoginResponse>;
   joinLobby: LobbyResponse;
   loginUser?: Maybe<LoginResponse>;
 };
 
 
 export type MutationCreateUserArgs = {
+  options: CreateUserInput;
+};
+
+
+export type MutationEditUserArgs = {
   options: CreateUserInput;
 };
 
@@ -120,6 +126,15 @@ export type LoginUserInput = {
   password: Scalars['String'];
 };
 
+export type EditUserMutationVariables = Exact<{
+  username: Scalars['String'];
+  password: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type EditUserMutation = { __typename?: 'Mutation', editUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, user?: { __typename?: 'User', username: string, email: string, elo: number, uuid: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
+
 export type LoginUserMutationVariables = Exact<{
   options: LoginUserInput;
 }>;
@@ -147,6 +162,27 @@ export type UserFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
 export type UserFromTokenQuery = { __typename?: 'Query', userFromToken?: { __typename?: 'User', uuid: string, username: string, email: string, elo: number } | null };
 
 
+export const EditUserDocument = gql`
+    mutation editUser($username: String!, $password: String!, $email: String!) {
+  editUser(options: {username: $username, password: $password, email: $email}) {
+    user {
+      username
+      email
+      elo
+      uuid
+    }
+    accesstoken
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+
+export function useEditUserMutation() {
+  return Urql.useMutation<EditUserMutation, EditUserMutationVariables>(EditUserDocument);
+};
 export const LoginUserDocument = gql`
     mutation loginUser($options: loginUserInput!) {
   loginUser(options: $options) {

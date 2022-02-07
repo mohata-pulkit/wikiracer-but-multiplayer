@@ -9,6 +9,7 @@
 		"gen": "graphql-codegen --config codegen.yml"
 	},
 	"dependencies": {
+		"@heroicons/react": "^1.0.5",
 		"@urql/exchange-graphcache": "^4.3.6",
 		"cookies-next": "^2.0.3",
 		"formik": "^2.2.9",

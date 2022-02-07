@@ -1,4 +1,5 @@
 import * as React from "react";
+import Footer from "./footer";
 import Navbar from "./navbar";
 
 export class Layout extends React.Component {
@@ -7,6 +8,7 @@ export class Layout extends React.Component {
 			<div>
 				<Navbar />
 				{this.props.children}
+				<Footer />
 			</div>
 		);
 	}

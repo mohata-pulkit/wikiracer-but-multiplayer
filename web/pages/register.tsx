@@ -26,7 +26,7 @@ const register: NextPage = () => {
 			}}
 		>
 			{({ errors }) => (
-				<Form className="flex-col flex gap-4 p-4 mx-4 md:mx-auto my-4 border-2 bg-grey-200 dark:bg-grey-800 border-grey-900 dark:border-grey-100 rounded-md w-auto md:w-1/2 lg:w-1/3">
+				<Form className="flex-col flex gap-4 p-4 mx-4 md:mx-auto my-8 border-2 bg-grey-200 dark:bg-grey-800 border-grey-900 dark:border-grey-100 rounded-md w-auto md:w-1/2 lg:w-1/3">
 					<div className="h-fit">
 						<p className="font-serif font-bold text-4xl text-center">
 							Create an Account

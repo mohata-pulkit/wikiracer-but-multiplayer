@@ -10,6 +10,24 @@ class MyDocument extends Document {
 			<Html>
 				<Head>
 					<link
+						rel="apple-touch-icon"
+						sizes="180x180"
+						href="/favicons/apple-touch-icon.png"
+					/>
+					<link
+						rel="icon"
+						type="image/png"
+						sizes="32x32"
+						href="/favicons/favicon-32x32.png"
+					/>
+					<link
+						rel="icon"
+						type="image/png"
+						sizes="16x16"
+						href="/favicons/favicon-16x16.png"
+					/>
+					<link rel="manifest" href="/favicon/site.webmanifest" />
+					<link
 						rel="preconnect"
 						href="https://fonts.googleapis.com"
 					></link>
@@ -26,7 +44,7 @@ class MyDocument extends Document {
 						rel="stylesheet"
 					></link>
 				</Head>
-				<body className="bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 justify-center">
+				<body className="bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 justify-center min-h-full h-full">
 					<Main />
 					<NextScript />
 				</body>

@@ -1,0 +1,17 @@
+mutation editUser($username: String!, $password: String!, $email: String!) {
+	editUser(
+		options: { username: $username, password: $password, email: $email }
+	) {
+		user {
+			username
+			email
+			elo
+			uuid
+		}
+		accesstoken
+		errors {
+			field
+			message
+		}
+	}
+}

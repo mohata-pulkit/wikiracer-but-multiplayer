@@ -10,6 +10,7 @@ import {
 	LoginUserMutation,
 	UserFromTokenQuery,
 	CreateUserMutation,
+	EditUserMutation,
 } from "../generated/graphql";
 
 import { createClient, dedupExchange, fetchExchange, Provider } from "urql";
@@ -79,6 +80,26 @@ const client = createClient({
 										return {
 											userFromToken:
 												result.createUser.user,
+										};
+									}
+								} else {
+									return query;
+								}
+							}
+						);
+					},
+					editUser: (_result, args, cache, info) => {
+						betterUpdateQuery<EditUserMutation, UserFromTokenQuery>(
+							cache,
+							{ query: UserFromTokenDocument },
+							_result,
+							(result, query) => {
+								if (result.editUser) {
+									if (result.editUser.errors) {
+										return query;
+									} else {
+										return {
+											userFromToken: result.editUser.user,
 										};
 									}
 								} else {
