@@ -126,6 +126,11 @@ export type LoginUserInput = {
   password: Scalars['String'];
 };
 
+export type CreateLobbyMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateLobbyMutation = { __typename?: 'Mutation', createLobby: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null } };
+
 export type EditUserMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -134,6 +139,13 @@ export type EditUserMutationVariables = Exact<{
 
 
 export type EditUserMutation = { __typename?: 'Mutation', editUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, user?: { __typename?: 'User', username: string, email: string, elo: number, uuid: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
+
+export type JoinLobbyMutationVariables = Exact<{
+  lobbyID: Scalars['String'];
+}>;
+
+
+export type JoinLobbyMutation = { __typename?: 'Mutation', joinLobby: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null } };
 
 export type LoginUserMutationVariables = Exact<{
   options: LoginUserInput;
@@ -162,6 +174,18 @@ export type UserFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
 export type UserFromTokenQuery = { __typename?: 'Query', userFromToken?: { __typename?: 'User', uuid: string, username: string, email: string, elo: number } | null };
 
 
+export const CreateLobbyDocument = gql`
+    mutation createLobby {
+  createLobby {
+    accesstoken
+    error
+  }
+}
+    `;
+
+export function useCreateLobbyMutation() {
+  return Urql.useMutation<CreateLobbyMutation, CreateLobbyMutationVariables>(CreateLobbyDocument);
+};
 export const EditUserDocument = gql`
     mutation editUser($username: String!, $password: String!, $email: String!) {
   editUser(options: {username: $username, password: $password, email: $email}) {
@@ -182,6 +206,18 @@ export const EditUserDocument = gql`
 
 export function useEditUserMutation() {
   return Urql.useMutation<EditUserMutation, EditUserMutationVariables>(EditUserDocument);
+};
+export const JoinLobbyDocument = gql`
+    mutation joinLobby($lobbyID: String!) {
+  joinLobby(uuid: $lobbyID) {
+    accesstoken
+    error
+  }
+}
+    `;
+
+export function useJoinLobbyMutation() {
+  return Urql.useMutation<JoinLobbyMutation, JoinLobbyMutationVariables>(JoinLobbyDocument);
 };
 export const LoginUserDocument = gql`
     mutation loginUser($options: loginUserInput!) {

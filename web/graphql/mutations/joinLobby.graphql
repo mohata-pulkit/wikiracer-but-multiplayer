@@ -1,0 +1,6 @@
+mutation joinLobby($lobbyID: String!) {
+	joinLobby(uuid: $lobbyID) {
+		accesstoken
+		error
+	}
+}

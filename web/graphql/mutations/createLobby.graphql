@@ -1,0 +1,6 @@
+mutation createLobby {
+	createLobby {
+		accesstoken
+		error
+	}
+}

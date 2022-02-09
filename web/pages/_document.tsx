@@ -1,8 +1,4 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import {
-	useLobbyFromTokenQuery,
-	useUserFromTokenQuery,
-} from "../generated/graphql";
 
 class MyDocument extends Document {
 	render() {
@@ -44,7 +40,7 @@ class MyDocument extends Document {
 						rel="stylesheet"
 					></link>
 				</Head>
-				<body className="bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 justify-center min-h-full h-full">
+				<body className="bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 justify-center h-full w-full top-0 bottom-0 absolute">
 					<Main />
 					<NextScript />
 				</body>

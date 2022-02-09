@@ -45,7 +45,7 @@ export default class LobbyResolver {
 	): Promise<LobbyResponse | null> {
 		if (context.payload === null) {
 			return {
-				error: "bruh login before joining a lobby 🤦",
+				error: "bruh login before creating a lobby 🤦",
 			};
 		} else {
 			const uuidUser = context.payload?.uuidUser;
@@ -73,7 +73,7 @@ export default class LobbyResolver {
 				};
 			} else {
 				return {
-					error: "bruh login before joining a lobby 🤦",
+					error: "bruh login before creating a lobby 🤦",
 				};
 			}
 		}
