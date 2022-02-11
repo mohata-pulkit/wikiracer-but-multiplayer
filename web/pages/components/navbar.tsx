@@ -21,9 +21,9 @@ const Navbar: NextPage = () => {
 	});
 
 	return (
-		<div>
-			<nav className="flex gap-8 p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900 font-medium font-serif">
-				<div className="p-2 font-black text-2xl">
+		<div className="font-bold font-serif">
+			<nav className="flex gap-8 p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900">
+				<div className="p-2 font-bold text-2xl">
 					<Link href="/">WikiRacer</Link>
 				</div>
 				<div className="flex gap-4 ml-auto">
@@ -56,7 +56,7 @@ const Navbar: NextPage = () => {
 				</div>
 			</nav>
 			{menu ? (
-				<div className="flex flex-col gap-4 z-10 absolute right-0 p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900 font-medium font-serif">
+				<div className="flex flex-col gap-4 z-10 absolute right-0 p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900">
 					<div className="flex flex-row gap-2 p-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md">
 						<div>Dark Mode</div>
 						{darkMode ? (

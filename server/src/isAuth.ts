@@ -18,7 +18,6 @@ export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
 			uuidUser: (<any>payload).authtoken.uuidUser,
 			uuidLobby: (<any>payload).authtoken.uuidLobby,
 		} as AuthToken;
-		console.log(payload);
 	} catch (err) {
 		console.log(err);
 		throw new Error("Not authenticated");

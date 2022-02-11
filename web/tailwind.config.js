@@ -1,5 +1,9 @@
 module.exports = {
+	plugins: [require("tailwind-scrollbar")],
 	darkMode: "class",
+	variants: {
+		scrollbar: ["dark", "rounded"],
+	},
 	content: [
 		"./pages/**/*.{js,ts,jsx,tsx}",
 		"./components/**/*.{js,ts,jsx,tsx}",
@@ -8,9 +12,9 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				sans: ["Fira Sans"],
-				serif: ["Roboto Slab"],
+				serif: ["Zilla Slab"],
 				mono: ["Fira Code"],
-				display: ["Roboto Slab"],
+				display: ["Zilla Slab"],
 				body: ["Fira Sans"],
 			},
 			colors: {
@@ -566,5 +570,4 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
 };

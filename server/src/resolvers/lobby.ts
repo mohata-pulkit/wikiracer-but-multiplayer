@@ -50,6 +50,17 @@ export default class LobbyResolver {
 		} else {
 			const uuidUser = context.payload?.uuidUser;
 			if (uuidUser != null) {
+				const lobbies = await context.em.find(Lobby, {});
+				lobbies.forEach((lobby) => {
+					lobby.users.forEach((user) => {
+						if (user === uuidUser) {
+							lobby.users = lobby.users.filter((ele) => {
+								return ele != user;
+							});
+						}
+					});
+					context.em.persist(lobby);
+				});
 				const lobby = await context.em.create(Lobby, {
 					users: [uuidUser],
 				});

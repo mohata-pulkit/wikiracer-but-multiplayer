@@ -5,7 +5,6 @@ import {
 	BeakerIcon,
 	BookOpenIcon,
 	CalculatorIcon,
-	ChartBarIcon,
 	FilterIcon,
 	GlobeIcon,
 	LibraryIcon,
@@ -15,251 +14,93 @@ import {
 	ScaleIcon,
 	UserGroupIcon,
 } from "@heroicons/react/outline";
-import {
-	useLobbyFromTokenQuery,
-	useUserFromTokenQuery,
-} from "../generated/graphql";
 import { useEffect, useState } from "react";
 import { Field, Form, Formik } from "formik";
 import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
+import Play from "./components/play";
+import Image from "next/image";
 
 const Home: NextPage = () => {
-	const [sbmm, setSbmm] = useState(true);
-
-	useEffect(() => {
-		if (!sbmm) {
-			document.getElementById("sbmm-grid")?.classList.add("hidden");
-			document.getElementById("custom-flex")?.classList.remove("hidden");
-			document
-				.getElementById("sbmm")
-				?.classList.remove("dark:bg-amber-400-accent");
-			document
-				.getElementById("sbmm")
-				?.classList.remove("bg-amber-200-accent");
-			document
-				.getElementById("sbmm")
-				?.classList.remove("dark:text-gray-900");
-			document
-				.getElementById("custom")
-				?.classList.add("dark:bg-amber-400-accent");
-			document
-				.getElementById("custom")
-				?.classList.add("bg-amber-200-accent");
-			document
-				.getElementById("custom")
-				?.classList.add("dark:text-gray-900");
-			document.getElementById("sbmm")?.classList.add("bg-grey-300");
-			document.getElementById("sbmm")?.classList.add("dark:bg-grey-700");
-			document.getElementById("custom")?.classList.remove("bg-grey-300");
-			document
-				.getElementById("custom")
-				?.classList.remove("dark:bg-grey-700");
-		} else {
-			document.getElementById("sbmm-grid")?.classList.remove("hidden");
-			document.getElementById("custom-flex")?.classList.add("hidden");
-			document
-				.getElementById("sbmm")
-				?.classList.add("dark:bg-amber-400-accent");
-			document
-				.getElementById("sbmm")
-				?.classList.add("bg-amber-200-accent");
-			document
-				.getElementById("sbmm")
-				?.classList.add("dark:text-gray-900");
-			document
-				.getElementById("custom")
-				?.classList.remove("dark:bg-amber-400-accent");
-			document
-				.getElementById("custom")
-				?.classList.remove("bg-amber-200-accent");
-			document
-				.getElementById("custom")
-				?.classList.remove("dark:text-gray-900");
-			document.getElementById("sbmm")?.classList.remove("bg-grey-300");
-			document
-				.getElementById("sbmm")
-				?.classList.remove("dark:bg-grey-700");
-			document.getElementById("custom")?.classList.add("bg-grey-300");
-			document
-				.getElementById("custom")
-				?.classList.add("dark:bg-grey-700");
-		}
-	});
-	const [, createLobby] = graphql.useCreateLobbyMutation();
-	const [, joinLobby] = graphql.useJoinLobbyMutation();
-	const router = useRouter();
 	return (
-		<div className="flex-col flex gap-4 p-4 mx-auto my-8 border-2 bg-grey-200 dark:bg-grey-800 border-grey-900 dark:border-grey-100 rounded-md w-fit">
-			<div className="h-fit">
-				<p className="font-serif font-bold text-4xl text-center">
-					Start Racing!
+		<div className="flex flex-col items-center gap-4">
+			<div className="w-full md:w-1/3 relative justify-center text-center align-middle">
+				<Image
+					src="/wikicat.png"
+					height="480"
+					width="480"
+					layout="responsive"
+				/>
+			</div>
+			<div>
+				<h1 className="font-serif font-bold text-7xl text-center">
+					WikiRacer
+				</h1>
+				<p className="font-sans font-bold text-base text-center">
+					Competitive Wikipedia Speedrunning
 				</p>
 			</div>
-			<div className="flex flex-col justify-center text-center align-middle p-2">
-				<div className="flex flex-row gap-4">
-					<div
-						className="cursor-pointer w-full p-2 font-bold bg-amber-200-accent dark:bg-amber-400-accent dark:text-gray-900"
-						id="sbmm"
-						onClick={() => setSbmm(true)}
-					>
-						Matchmaking
-					</div>
-					<div
-						className="cursor-pointer w-full p-2 font-bold bg-grey-300 dark:bg-grey-700"
-						id="custom"
-						onClick={() => setSbmm(false)}
-					>
-						Custom Game
-					</div>
-				</div>
-				<div
-					id="sbmm-grid"
-					className="grid grid-cols-2 md:grid-cols-4 gap-2 p-2"
-				>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<QuestionMarkCircleIcon className="h-6 w-6" />
-						Random Seed
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<FilterIcon className="h-6 w-6" />
-						Filtered Seed
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<BookOpenIcon className="h-6 w-6" />
-						Only Paragraphs
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<UserGroupIcon className="h-6 w-6" />
-						Living People
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<CalculatorIcon className="h-6 w-6" />
-						Math and Computing
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<BeakerIcon className="h-6 w-6" />
-						Natural Sciences
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<AcademicCapIcon className="h-6 w-6" />
-						Philosophy and Religion
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<LibraryIcon className="h-6 w-6" />
-						History
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<GlobeIcon className="h-6 w-6" />
-						Politics and Economics
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<LightningBoltIcon className="h-6 w-6" />
-						Video Games
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<LockClosedIcon className="h-6 w-6" />
-						NSFW
-					</div>
-					<div className="p-2 my-auto break-words h-32 w-32 flex flex-col items-center justify-center border-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif hover:bg-amber-200-accent hover:dark:text-gray-900 hover:dark:bg-amber-400-accent">
-						<ScaleIcon className="h-6 w-6" />
-						Law
-					</div>
-				</div>
-				<div
-					className="flex flex-col justify-center gap-4 p-2 w-80"
-					id="custom-flex"
-				>
-					<Formik
-						initialValues={{ error: "" }}
-						onSubmit={async ({}, { setErrors }) => {
-							const response = await createLobby();
-							if (response.data?.createLobby?.error) {
-								setErrors({
-									error: response.data.createLobby.error,
-								});
-							} else {
-								setCookies(
-									"accessToken",
-									response.data?.createLobby?.accesstoken
-								);
-								router.push("/");
-							}
-						}}
-					>
-						{({ errors }) => (
-							<Form>
-								<div className="p-2 border-2 flex flex-col gap-1 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif">
-									<label
-										htmlFor="lobbyID"
-										className="font-medium"
-									>
-										Create a Custom Game
-										<p className="text-xs text-red-200-accent">
-											{errors.error
-												? errors.error
-												: "\xa0"}
-										</p>
-									</label>
-									<button
-										type="submit"
-										className="w-full p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900 rounded-md font-medium text-lg font-serif"
-									>
-										Create
-									</button>
-								</div>
-							</Form>
-						)}
-					</Formik>
-					<Formik
-						initialValues={{ lobbyID: "" }}
-						onSubmit={async (values, { setErrors }) => {
-							const response = await joinLobby(values);
-							if (response.data?.joinLobby?.error) {
-								setErrors({
-									lobbyID: response.data.joinLobby.error,
-								});
-							} else {
-								setCookies(
-									"accessToken",
-									response.data?.joinLobby?.accesstoken
-								);
-								router.push("/");
-							}
-						}}
-					>
-						{({ errors }) => (
-							<Form>
-								<div className="p-2 border-2 flex flex-col gap-1 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md text-lg border-grey-700 dark:border-grey-300 font-medium font-serif">
-									<label
-										htmlFor="lobbyID"
-										className="font-medium"
-									>
-										Join a Custom Game
-										<p className="text-xs text-red-200-accent">
-											{errors.lobbyID
-												? errors.lobbyID
-												: "\xa0"}
-										</p>
-									</label>
-									<Field
-										id="lobbyID"
-										name="lobbyID"
-										placeholder="lobbyID"
-										className="w-full bg-transparent border-2 border-grey-900 dark:border-grey-100 p-2 rounded-md text-lg"
-									></Field>
 
-									<button
-										type="submit"
-										className="w-full p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900 rounded-md font-medium text-lg font-serif"
-									>
-										Join
-									</button>
-								</div>
-							</Form>
-						)}
-					</Formik>
+			<div className="grid grid-cols-1 md:grid-cols-2 p-8 gap-4">
+				<div className="flex-col flex gap-4 p-4 mx-auto my-8 border-2 bg-grey-200 dark:bg-grey-800 border-grey-900 dark:border-grey-100 rounded-md w-fit">
+					<div className="flex flex-col p-2 gap-2">
+						<h2 className="text-3xl font-serif font-bold">
+							What is WikiRacing?
+						</h2>
+						<p className="tracking-wide">
+							Wikiracing is a game using Wikipedia, the online
+							encyclopedia, which focuses on traversing links from
+							one page to another. It has many different
+							variations and names, including The Wikipedia Game,
+							Wikipedia Maze, Wikispeedia, Wikiwars, Wikipedia
+							Ball, Litner Ball, Wikipedia Racing, and Wikipedia
+							Speedrunning.
+						</p>
+					</div>
+					<div className="flex flex-col p-2">
+						<h2 className="text-3xl font-serif font-bold">
+							How do I get started?
+						</h2>
+						<p className="tracking-wide">
+							It's simple. You start by creating an account using
+							the "register" button in the top right corner. Then
+							you can either use the matchmaking service to get
+							connected in a 1v1 wikirace with another player, or
+							you can create a custom game that your friends can
+							join using the lobby key.
+						</p>
+					</div>
+					<div className="flex flex-col p-2">
+						<h2 className="text-3xl font-serif font-bold">
+							Why do I need to make an account? Why cant I play
+							using a nickname?
+						</h2>
+						<p className="tracking-wide">
+							An account lets us track your skill at wikiracing
+							and allows to improve your matchmaking. It also
+							allows us to ensure that no robots are using the
+							site. If you're concerned about data privacy you can
+							read our privacy statement available here.
+						</p>
+					</div>
+					<div className="flex flex-col p-2">
+						<h2 className="text-3xl font-serif font-bold">
+							I've seen other sites with similar concepts, what
+							makes WikiRacer different?
+						</h2>
+						<p className="tracking-wide">
+							Wikiracing is a very common game concept and many
+							sites already exist that implement this. WikiRacer
+							offers a competitive wikiracing experience, more
+							akin to a esport than a casual game. It also (in our
+							opinion) has the most diverse matchmaking and custom
+							lobby options. Oh and also dark mode and cats 😼.
+							WikiRacer is currently looking for nothing but
+							competition!
+						</p>
+					</div>
 				</div>
+				<Play />
 			</div>
 		</div>
 	);
