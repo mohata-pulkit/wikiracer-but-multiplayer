@@ -25,12 +25,14 @@
 		"typescript": "^4.5.5"
 	},
 	"dependencies": {
+		"@graphql-tools/schema": "^8.3.1",
 		"@mikro-orm/cli": "^4.5.10",
 		"@mikro-orm/core": "^4.5.10",
 		"@mikro-orm/migrations": "^4.5.10",
 		"@mikro-orm/postgresql": "^4.5.10",
 		"@node-redis/client": "^1.0.3",
 		"@types/uuid": "^8.3.4",
+		"@types/ws": "^8.2.2",
 		"apollo-server-express": "^3.6.2",
 		"argon2": "^0.28.3",
 		"class-validator": "^0.13.2",
@@ -40,15 +42,20 @@
 		"express-jwt": "^6.1.0",
 		"express-session": "^1.17.2",
 		"graphql": "15.3.0",
+		"graphql-postgres-subscriptions": "^1.0.5",
+		"graphql-subscriptions": "^2.0.0",
+		"graphql-ws": "^5.5.5",
 		"jsonwebtoken": "^8.5.1",
 		"nodemon": "^2.0.15",
 		"pg": "^8.7.1",
 		"redis": "3.1.2",
 		"reflect-metadata": "^0.1.13",
+		"subscriptions-transport-ws": "^0.11.0",
 		"ts-node": "^10.4.0",
 		"type-graphql": "^1.1.1",
 		"typeorm": "^0.2.41",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"ws": "^8.5.0"
 	},
 	"mikro-orm": {
 		"useTsNode": true,

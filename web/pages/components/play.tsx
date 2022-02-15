@@ -18,6 +18,8 @@ import { useEffect, useState } from "react";
 import { Field, Form, Formik } from "formik";
 import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const Play: NextPage = () => {
 	const [sbmm, setSbmm] = useState(true);
@@ -260,4 +262,4 @@ const Play: NextPage = () => {
 	);
 };
 
-export default Play;
+export default withUrqlClient(createUrqlClient)(Play);

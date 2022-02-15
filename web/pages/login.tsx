@@ -5,8 +5,10 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
-const login: NextPage = () => {
+const Login: NextPage = () => {
 	const [, loginUser] = graphql.useLoginUserMutation();
 	const router = useRouter();
 	return (
@@ -85,4 +87,4 @@ const login: NextPage = () => {
 	);
 };
 
-export default login;
+export default withUrqlClient(createUrqlClient)(Login);

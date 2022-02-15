@@ -100,6 +100,16 @@ export type QueryUserArgs = {
   uuid: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  lobbySubscription: Lobby;
+};
+
+
+export type SubscriptionLobbySubscriptionArgs = {
+  lobbyUuid: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['String'];
@@ -168,10 +178,24 @@ export type LobbyFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LobbyFromTokenQuery = { __typename?: 'Query', lobbyFromToken?: { __typename?: 'Lobby', uuid: string, users: Array<string> } | null };
 
+export type UserQueryVariables = Exact<{
+  userUuid: Scalars['String'];
+}>;
+
+
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'UserResponse', user?: { __typename?: 'User', uuid: string, username: string, createdAt: string, email: string, elo: number } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
+
 export type UserFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserFromTokenQuery = { __typename?: 'Query', userFromToken?: { __typename?: 'User', uuid: string, username: string, email: string, elo: number } | null };
+
+export type LobbySubscriptionVariables = Exact<{
+  lobbyUuid: Scalars['String'];
+}>;
+
+
+export type LobbySubscription = { __typename?: 'Subscription', lobbySubscription: { __typename?: 'Lobby', users: Array<string> } };
 
 
 export const CreateLobbyDocument = gql`
@@ -273,6 +297,27 @@ export const LobbyFromTokenDocument = gql`
 export function useLobbyFromTokenQuery(options?: Omit<Urql.UseQueryArgs<LobbyFromTokenQueryVariables>, 'query'>) {
   return Urql.useQuery<LobbyFromTokenQuery>({ query: LobbyFromTokenDocument, ...options });
 };
+export const UserDocument = gql`
+    query user($userUuid: String!) {
+  user(uuid: $userUuid) {
+    user {
+      uuid
+      username
+      createdAt
+      email
+      elo
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+
+export function useUserQuery(options: Omit<Urql.UseQueryArgs<UserQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserQuery>({ query: UserDocument, ...options });
+};
 export const UserFromTokenDocument = gql`
     query userFromToken {
   userFromToken {
@@ -286,4 +331,15 @@ export const UserFromTokenDocument = gql`
 
 export function useUserFromTokenQuery(options?: Omit<Urql.UseQueryArgs<UserFromTokenQueryVariables>, 'query'>) {
   return Urql.useQuery<UserFromTokenQuery>({ query: UserFromTokenDocument, ...options });
+};
+export const LobbyDocument = gql`
+    subscription lobby($lobbyUuid: String!) {
+  lobbySubscription(lobbyUuid: $lobbyUuid) {
+    users
+  }
+}
+    `;
+
+export function useLobbySubscription<TData = LobbySubscription>(options: Omit<Urql.UseSubscriptionArgs<LobbySubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<LobbySubscription, TData>) {
+  return Urql.useSubscription<LobbySubscription, TData, LobbySubscriptionVariables>({ query: LobbyDocument, ...options }, handler);
 };

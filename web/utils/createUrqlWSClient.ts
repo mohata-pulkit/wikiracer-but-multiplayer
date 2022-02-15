@@ -1,6 +1,6 @@
 import { dedupExchange, fetchExchange, subscriptionExchange } from "urql";
 import { cacheExchange } from "@urql/exchange-graphcache";
-import WebSocket from "ws";
+
 import { createClient as createWSClient } from "graphql-ws";
 import {
 	CreateUserMutation,
@@ -11,12 +11,14 @@ import {
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { getCookie } from "cookies-next";
+import { WebSocket } from "ws";
 
-// const wsClient = createWSClient({
-// 	url: "ws://localhost:4000/graphql",
-// });
+const wsClient = createWSClient({
+	url: "ws://localhost:4000/graphql",
+	webSocketImpl: WebSocket,
+});
 
-export const createUrqlClient = (ssrExchange: any) => ({
+export const createUrqlWSClient = (ssrExchange: any) => ({
 	url: "http://localhost:4000/graphql",
 	fetchOptions: () => {
 		const token = getCookie("accessToken");
@@ -27,6 +29,7 @@ export const createUrqlClient = (ssrExchange: any) => ({
 	},
 	exchanges: [
 		dedupExchange,
+
 		cacheExchange({
 			updates: {
 				Mutation: {
@@ -102,13 +105,18 @@ export const createUrqlClient = (ssrExchange: any) => ({
 			},
 		}),
 		fetchExchange,
+		subscriptionExchange({
+			forwardSubscription(operation) {
+				return {
+					subscribe: (sink) => {
+						const dispose = wsClient.subscribe(operation, sink);
+						return {
+							unsubscribe: dispose,
+						};
+					},
+				};
+			},
+		}),
 		ssrExchange,
-		// subscriptionExchange({
-		// 	forwardSubscription: (operation) => ({
-		// 		subscribe: (sink) => ({
-		// 			unsubscribe: wsClient.subscribe(operation, sink),
-		// 		}),
-		// 	}),
-		// }),
 	],
 });

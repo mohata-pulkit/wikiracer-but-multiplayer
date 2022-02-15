@@ -1,0 +1,15 @@
+query user($userUuid: String!) {
+	user(uuid: $userUuid) {
+		user {
+			uuid
+			username
+			createdAt
+			email
+			elo
+		}
+		errors {
+			field
+			message
+		}
+	}
+}

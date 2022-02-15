@@ -61,7 +61,7 @@ const validateRegister = (options: createUserInput) => {
 		];
 	}
 
-	if (options.username.length <= 12) {
+	if (options.username.length >= 12) {
 		return [
 			{
 				field: "username",

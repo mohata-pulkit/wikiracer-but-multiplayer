@@ -1,3 +1,4 @@
+import { PubSubEngine } from "graphql-subscriptions";
 import { sign } from "jsonwebtoken";
 import { Lobby } from "../entities/Lobby";
 import { isAuth } from "../isAuth";
@@ -10,8 +11,24 @@ import {
 	Query,
 	Field,
 	UseMiddleware,
+	Subscription,
+	Root,
+	PubSub,
 } from "type-graphql";
 import { AuthToken } from "./AuthToken";
+
+async function removeEmptyEntries(context: MyContext) {
+	var entriesForDeletion: string[] = [];
+	const entries = await context.em.find(Lobby, {});
+	entries.forEach((entry) => {
+		if (entry.users.length == 0) {
+			entriesForDeletion.push(entry.uuid);
+		}
+	});
+	entriesForDeletion.forEach((entry) => {
+		context.em.nativeDelete(Lobby, entry);
+	});
+}
 
 @ObjectType()
 class LobbyResponse {
@@ -70,6 +87,8 @@ export default class LobbyResolver {
 				authtoken.uuidUser = uuidUser;
 				authtoken.uuidLobby = lobby.uuid;
 
+				removeEmptyEntries(context);
+
 				return {
 					accesstoken: sign(
 						{
@@ -89,9 +108,22 @@ export default class LobbyResolver {
 			}
 		}
 	}
+
+	@Subscription(() => Lobby, {
+		topics: ({ args }) => {
+			return args._lobbyUuid;
+		},
+	})
+	lobbySubscription(
+		@Arg("lobbyUuid") _lobbyUuid: string,
+		@Root() lobby: Lobby
+	): { users: string[] } {
+		return lobby;
+	}
 	@Mutation(() => LobbyResponse)
 	@UseMiddleware(isAuth)
 	async joinLobby(
+		@PubSub() pubSub: PubSubEngine,
 		@Arg("uuid", () => String) uuid: string,
 		@Ctx() context: MyContext
 	): Promise<LobbyResponse | null> {
@@ -115,9 +147,13 @@ export default class LobbyResolver {
 
 						context.em.persistAndFlush(lobby);
 
+						pubSub.publish(lobby.uuid, lobby);
+
 						var authtoken = new AuthToken();
 						authtoken.uuidUser = uuidUser;
 						authtoken.uuidLobby = lobby?.uuid;
+
+						removeEmptyEntries(context);
 
 						response = sign(
 							{

@@ -1,0 +1,5 @@
+subscription lobby($lobbyUuid: String!) {
+	lobbySubscription(lobbyUuid: $lobbyUuid) {
+		users
+	}
+}

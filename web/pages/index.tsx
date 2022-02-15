@@ -1,25 +1,11 @@
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { withUrqlClient } from "next-urql";
+
 import type { NextPage } from "next";
-import * as graphql from "../generated/graphql";
-import {
-	AcademicCapIcon,
-	BeakerIcon,
-	BookOpenIcon,
-	CalculatorIcon,
-	FilterIcon,
-	GlobeIcon,
-	LibraryIcon,
-	LightningBoltIcon,
-	LockClosedIcon,
-	QuestionMarkCircleIcon,
-	ScaleIcon,
-	UserGroupIcon,
-} from "@heroicons/react/outline";
-import { useEffect, useState } from "react";
-import { Field, Form, Formik } from "formik";
-import { setCookies } from "cookies-next";
-import { useRouter } from "next/router";
-import Play from "./components/play";
+
 import Image from "next/image";
+
+import Play from "./components/play";
 
 const Home: NextPage = () => {
 	return (
@@ -100,10 +86,10 @@ const Home: NextPage = () => {
 						</p>
 					</div>
 				</div>
-				<Play />
+				<Play pageProps={""} />
 			</div>
 		</div>
 	);
 };
 
-export default Home;
+export default withUrqlClient(createUrqlClient)(Home);

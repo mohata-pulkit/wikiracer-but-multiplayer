@@ -5,8 +5,10 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
-const register: NextPage = () => {
+const Register: NextPage = () => {
 	const [, createUser] = graphql.useCreateUserMutation();
 	const router = useRouter();
 	return (
@@ -91,4 +93,4 @@ const register: NextPage = () => {
 	);
 };
 
-export default register;
+export default withUrqlClient(createUrqlClient)(Register);

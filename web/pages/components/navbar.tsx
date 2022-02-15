@@ -4,6 +4,8 @@ import { AdjustmentsIcon, MoonIcon, SunIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
 import { useUserFromTokenQuery } from "../../generated/graphql";
 import { getCookie, setCookies } from "cookies-next";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const Navbar: NextPage = () => {
 	const [{ data }] = useUserFromTokenQuery();
@@ -79,4 +81,4 @@ const Navbar: NextPage = () => {
 	);
 };
 
-export default Navbar;
+export default withUrqlClient(createUrqlClient)(Navbar);

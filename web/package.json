@@ -1,4 +1,9 @@
 {
+	"browser": {
+		"fs": false,
+		"path": false,
+		"os": false
+	},
 	"name": "web",
 	"private": true,
 	"scripts": {
@@ -14,12 +19,16 @@
 		"cookies-next": "^2.0.3",
 		"formik": "^2.2.9",
 		"graphql": "^16.3.0",
+		"graphql-ws": "^5.5.5",
+		"net": "^1.0.2",
 		"next": "12.0.10",
 		"next-urql": "^3.3.2",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"react-is": "^17.0.2",
+		"tls": "^0.0.1",
 		"urql": "^2.1.3",
+		"ws": "^8.5.0",
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {
