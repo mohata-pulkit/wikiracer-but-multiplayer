@@ -9,13 +9,13 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Register: NextPage = () => {
-	const [, createUser] = graphql.useCreateUserMutation();
+	const [createUser] = graphql.useCreateUserMutation();
 	const router = useRouter();
 	return (
 		<Formik
 			initialValues={{ username: "", password: "", email: "" }}
 			onSubmit={async (values, { setErrors }) => {
-				const response = await createUser(values);
+				const response = await createUser({ variables: values });
 				if (response.data?.createUser?.errors) {
 					setErrors(toErrorMap(response.data.createUser.errors));
 				} else {
@@ -93,4 +93,4 @@ const Register: NextPage = () => {
 	);
 };
 
-export default withUrqlClient(createUrqlClient)(Register);
+export default Register;

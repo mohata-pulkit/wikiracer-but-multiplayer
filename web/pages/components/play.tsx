@@ -83,8 +83,8 @@ const Play: NextPage = () => {
 				?.classList.add("dark:bg-grey-700");
 		}
 	});
-	const [, createLobby] = graphql.useCreateLobbyMutation();
-	const [, joinLobby] = graphql.useJoinLobbyMutation();
+	const [createLobby] = graphql.useCreateLobbyMutation();
+	const [joinLobby] = graphql.useJoinLobbyMutation();
 	const router = useRouter();
 	return (
 		<div className="flex-col flex gap-4 p-4 mx-auto my-8 border-2 bg-grey-200 dark:bg-grey-800 border-grey-900 dark:border-grey-100 rounded-md w-full">
@@ -211,7 +211,9 @@ const Play: NextPage = () => {
 					<Formik
 						initialValues={{ lobbyID: "" }}
 						onSubmit={async (values, { setErrors }) => {
-							const response = await joinLobby(values);
+							const response = await joinLobby({
+								variables: values,
+							});
 							if (response.data?.joinLobby?.error) {
 								setErrors({
 									lobbyID: response.data.joinLobby.error,
@@ -262,4 +264,4 @@ const Play: NextPage = () => {
 	);
 };
 
-export default withUrqlClient(createUrqlClient)(Play);
+export default Play;

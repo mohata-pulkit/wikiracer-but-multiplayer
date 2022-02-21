@@ -6,7 +6,7 @@ import { MyContext } from "./types";
 export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
 	const authorization = context.req.headers["authorization"]?.split(" ")[1];
 	if (!authorization) {
-		throw new Error("Not authenticated");
+		throw new Error("No AuthToken");
 	}
 
 	try {

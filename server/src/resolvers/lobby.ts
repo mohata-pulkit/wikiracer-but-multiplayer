@@ -111,13 +111,13 @@ export default class LobbyResolver {
 
 	@Subscription(() => Lobby, {
 		topics: ({ args }) => {
-			return args._lobbyUuid;
+			return args.lobbyUuid;
 		},
 	})
 	lobbySubscription(
-		@Arg("lobbyUuid") _lobbyUuid: string,
+		@Arg("lobbyUuid") lobbyUuid: string,
 		@Root() lobby: Lobby
-	): { users: string[] } {
+	): Lobby {
 		return lobby;
 	}
 	@Mutation(() => LobbyResponse)

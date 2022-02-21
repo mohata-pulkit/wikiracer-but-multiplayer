@@ -8,7 +8,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const Navbar: NextPage = () => {
-	const [{ data }] = useUserFromTokenQuery();
+	const { data } = useUserFromTokenQuery();
 	const [menu, setMenu] = useState(false);
 	const [darkMode, setDarkMode] = useState(getCookie("darkMode"));
 
@@ -81,4 +81,4 @@ const Navbar: NextPage = () => {
 	);
 };
 
-export default withUrqlClient(createUrqlClient)(Navbar);
+export default Navbar;

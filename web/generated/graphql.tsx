@@ -1,11 +1,11 @@
-import gql from 'graphql-tag';
-import * as Urql from 'urql';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -107,7 +107,7 @@ export type Subscription = {
 
 
 export type SubscriptionLobbySubscriptionArgs = {
-  lobbyUuid: Scalars['String'];
+  lobbyUuid?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
@@ -206,10 +206,31 @@ export const CreateLobbyDocument = gql`
   }
 }
     `;
+export type CreateLobbyMutationFn = Apollo.MutationFunction<CreateLobbyMutation, CreateLobbyMutationVariables>;
 
-export function useCreateLobbyMutation() {
-  return Urql.useMutation<CreateLobbyMutation, CreateLobbyMutationVariables>(CreateLobbyDocument);
-};
+/**
+ * __useCreateLobbyMutation__
+ *
+ * To run a mutation, you first call `useCreateLobbyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLobbyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLobbyMutation, { data, loading, error }] = useCreateLobbyMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateLobbyMutation(baseOptions?: Apollo.MutationHookOptions<CreateLobbyMutation, CreateLobbyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLobbyMutation, CreateLobbyMutationVariables>(CreateLobbyDocument, options);
+      }
+export type CreateLobbyMutationHookResult = ReturnType<typeof useCreateLobbyMutation>;
+export type CreateLobbyMutationResult = Apollo.MutationResult<CreateLobbyMutation>;
+export type CreateLobbyMutationOptions = Apollo.BaseMutationOptions<CreateLobbyMutation, CreateLobbyMutationVariables>;
 export const EditUserDocument = gql`
     mutation editUser($username: String!, $password: String!, $email: String!) {
   editUser(options: {username: $username, password: $password, email: $email}) {
@@ -227,10 +248,34 @@ export const EditUserDocument = gql`
   }
 }
     `;
+export type EditUserMutationFn = Apollo.MutationFunction<EditUserMutation, EditUserMutationVariables>;
 
-export function useEditUserMutation() {
-  return Urql.useMutation<EditUserMutation, EditUserMutationVariables>(EditUserDocument);
-};
+/**
+ * __useEditUserMutation__
+ *
+ * To run a mutation, you first call `useEditUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editUserMutation, { data, loading, error }] = useEditUserMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useEditUserMutation(baseOptions?: Apollo.MutationHookOptions<EditUserMutation, EditUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditUserMutation, EditUserMutationVariables>(EditUserDocument, options);
+      }
+export type EditUserMutationHookResult = ReturnType<typeof useEditUserMutation>;
+export type EditUserMutationResult = Apollo.MutationResult<EditUserMutation>;
+export type EditUserMutationOptions = Apollo.BaseMutationOptions<EditUserMutation, EditUserMutationVariables>;
 export const JoinLobbyDocument = gql`
     mutation joinLobby($lobbyID: String!) {
   joinLobby(uuid: $lobbyID) {
@@ -239,10 +284,32 @@ export const JoinLobbyDocument = gql`
   }
 }
     `;
+export type JoinLobbyMutationFn = Apollo.MutationFunction<JoinLobbyMutation, JoinLobbyMutationVariables>;
 
-export function useJoinLobbyMutation() {
-  return Urql.useMutation<JoinLobbyMutation, JoinLobbyMutationVariables>(JoinLobbyDocument);
-};
+/**
+ * __useJoinLobbyMutation__
+ *
+ * To run a mutation, you first call `useJoinLobbyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useJoinLobbyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [joinLobbyMutation, { data, loading, error }] = useJoinLobbyMutation({
+ *   variables: {
+ *      lobbyID: // value for 'lobbyID'
+ *   },
+ * });
+ */
+export function useJoinLobbyMutation(baseOptions?: Apollo.MutationHookOptions<JoinLobbyMutation, JoinLobbyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<JoinLobbyMutation, JoinLobbyMutationVariables>(JoinLobbyDocument, options);
+      }
+export type JoinLobbyMutationHookResult = ReturnType<typeof useJoinLobbyMutation>;
+export type JoinLobbyMutationResult = Apollo.MutationResult<JoinLobbyMutation>;
+export type JoinLobbyMutationOptions = Apollo.BaseMutationOptions<JoinLobbyMutation, JoinLobbyMutationVariables>;
 export const LoginUserDocument = gql`
     mutation loginUser($options: loginUserInput!) {
   loginUser(options: $options) {
@@ -260,10 +327,32 @@ export const LoginUserDocument = gql`
   }
 }
     `;
+export type LoginUserMutationFn = Apollo.MutationFunction<LoginUserMutation, LoginUserMutationVariables>;
 
-export function useLoginUserMutation() {
-  return Urql.useMutation<LoginUserMutation, LoginUserMutationVariables>(LoginUserDocument);
-};
+/**
+ * __useLoginUserMutation__
+ *
+ * To run a mutation, you first call `useLoginUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginUserMutation, { data, loading, error }] = useLoginUserMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<LoginUserMutation, LoginUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginUserMutation, LoginUserMutationVariables>(LoginUserDocument, options);
+      }
+export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
+export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
+export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($username: String!, $password: String!, $email: String!) {
   createUser(options: {username: $username, password: $password, email: $email}) {
@@ -281,10 +370,34 @@ export const CreateUserDocument = gql`
   }
 }
     `;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 
-export function useCreateUserMutation() {
-  return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
-};
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const LobbyFromTokenDocument = gql`
     query lobbyFromToken {
   lobbyFromToken {
@@ -294,9 +407,32 @@ export const LobbyFromTokenDocument = gql`
 }
     `;
 
-export function useLobbyFromTokenQuery(options?: Omit<Urql.UseQueryArgs<LobbyFromTokenQueryVariables>, 'query'>) {
-  return Urql.useQuery<LobbyFromTokenQuery>({ query: LobbyFromTokenDocument, ...options });
-};
+/**
+ * __useLobbyFromTokenQuery__
+ *
+ * To run a query within a React component, call `useLobbyFromTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLobbyFromTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLobbyFromTokenQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLobbyFromTokenQuery(baseOptions?: Apollo.QueryHookOptions<LobbyFromTokenQuery, LobbyFromTokenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LobbyFromTokenQuery, LobbyFromTokenQueryVariables>(LobbyFromTokenDocument, options);
+      }
+export function useLobbyFromTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LobbyFromTokenQuery, LobbyFromTokenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LobbyFromTokenQuery, LobbyFromTokenQueryVariables>(LobbyFromTokenDocument, options);
+        }
+export type LobbyFromTokenQueryHookResult = ReturnType<typeof useLobbyFromTokenQuery>;
+export type LobbyFromTokenLazyQueryHookResult = ReturnType<typeof useLobbyFromTokenLazyQuery>;
+export type LobbyFromTokenQueryResult = Apollo.QueryResult<LobbyFromTokenQuery, LobbyFromTokenQueryVariables>;
 export const UserDocument = gql`
     query user($userUuid: String!) {
   user(uuid: $userUuid) {
@@ -315,9 +451,33 @@ export const UserDocument = gql`
 }
     `;
 
-export function useUserQuery(options: Omit<Urql.UseQueryArgs<UserQueryVariables>, 'query'>) {
-  return Urql.useQuery<UserQuery>({ query: UserDocument, ...options });
-};
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *      userUuid: // value for 'userUuid'
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+      }
+export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UserFromTokenDocument = gql`
     query userFromToken {
   userFromToken {
@@ -329,9 +489,32 @@ export const UserFromTokenDocument = gql`
 }
     `;
 
-export function useUserFromTokenQuery(options?: Omit<Urql.UseQueryArgs<UserFromTokenQueryVariables>, 'query'>) {
-  return Urql.useQuery<UserFromTokenQuery>({ query: UserFromTokenDocument, ...options });
-};
+/**
+ * __useUserFromTokenQuery__
+ *
+ * To run a query within a React component, call `useUserFromTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserFromTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserFromTokenQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserFromTokenQuery(baseOptions?: Apollo.QueryHookOptions<UserFromTokenQuery, UserFromTokenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserFromTokenQuery, UserFromTokenQueryVariables>(UserFromTokenDocument, options);
+      }
+export function useUserFromTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserFromTokenQuery, UserFromTokenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserFromTokenQuery, UserFromTokenQueryVariables>(UserFromTokenDocument, options);
+        }
+export type UserFromTokenQueryHookResult = ReturnType<typeof useUserFromTokenQuery>;
+export type UserFromTokenLazyQueryHookResult = ReturnType<typeof useUserFromTokenLazyQuery>;
+export type UserFromTokenQueryResult = Apollo.QueryResult<UserFromTokenQuery, UserFromTokenQueryVariables>;
 export const LobbyDocument = gql`
     subscription lobby($lobbyUuid: String!) {
   lobbySubscription(lobbyUuid: $lobbyUuid) {
@@ -340,6 +523,25 @@ export const LobbyDocument = gql`
 }
     `;
 
-export function useLobbySubscription<TData = LobbySubscription>(options: Omit<Urql.UseSubscriptionArgs<LobbySubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<LobbySubscription, TData>) {
-  return Urql.useSubscription<LobbySubscription, TData, LobbySubscriptionVariables>({ query: LobbyDocument, ...options }, handler);
-};
+/**
+ * __useLobbySubscription__
+ *
+ * To run a query within a React component, call `useLobbySubscription` and pass it any options that fit your needs.
+ * When your component renders, `useLobbySubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLobbySubscription({
+ *   variables: {
+ *      lobbyUuid: // value for 'lobbyUuid'
+ *   },
+ * });
+ */
+export function useLobbySubscription(baseOptions: Apollo.SubscriptionHookOptions<LobbySubscription, LobbySubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<LobbySubscription, LobbySubscriptionVariables>(LobbyDocument, options);
+      }
+export type LobbySubscriptionHookResult = ReturnType<typeof useLobbySubscription>;
+export type LobbySubscriptionResult = Apollo.SubscriptionResult<LobbySubscription>;

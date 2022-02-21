@@ -8,10 +8,10 @@ import { toErrorMap } from "../utils/toErrorMap";
 
 export const account: NextPage = () => {
 	var user = () => {
-		const [{ data }] = useUserFromTokenQuery();
+		const { data } = useUserFromTokenQuery();
 		return data;
 	};
-	const [, editUser] = graphql.useEditUserMutation();
+	const [editUser] = graphql.useEditUserMutation();
 	const router = useRouter();
 	var username = user()?.userFromToken?.username;
 	var email = user()?.userFromToken?.email;
@@ -24,7 +24,7 @@ export const account: NextPage = () => {
 				email: email ? email : "",
 			}}
 			onSubmit={async (values, { setErrors }) => {
-				const response = await editUser(values);
+				const response = await editUser({ variables: values });
 				if (response.data?.editUser?.errors) {
 					setErrors(toErrorMap(response.data.editUser.errors));
 				} else {

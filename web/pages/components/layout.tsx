@@ -8,7 +8,7 @@ export class Layout extends React.Component {
 	render() {
 		return (
 			<div className="relative min-h-screen h-full">
-				<Navbar pageProps={""} />
+				<Navbar />
 				{this.props.children}
 				<Footer />
 			</div>

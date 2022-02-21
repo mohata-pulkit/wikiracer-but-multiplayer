@@ -1,4 +1,5 @@
-import { dedupExchange, fetchExchange, subscriptionExchange } from "urql";
+import { dedupExchange, fetchExchange } from "urql";
+import { subscriptionExchange } from "urql";
 import { cacheExchange } from "@urql/exchange-graphcache";
 
 import { createClient as createWSClient } from "graphql-ws";
@@ -29,7 +30,6 @@ export const createUrqlWSClient = (ssrExchange: any) => ({
 	},
 	exchanges: [
 		dedupExchange,
-
 		cacheExchange({
 			updates: {
 				Mutation: {
@@ -105,6 +105,8 @@ export const createUrqlWSClient = (ssrExchange: any) => ({
 			},
 		}),
 		fetchExchange,
+
+		ssrExchange,
 		subscriptionExchange({
 			forwardSubscription(operation) {
 				return {
@@ -117,6 +119,5 @@ export const createUrqlWSClient = (ssrExchange: any) => ({
 				};
 			},
 		}),
-		ssrExchange,
 	],
 });

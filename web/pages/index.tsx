@@ -86,10 +86,10 @@ const Home: NextPage = () => {
 						</p>
 					</div>
 				</div>
-				<Play pageProps={""} />
+				<Play />
 			</div>
 		</div>
 	);
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
+export default Home;

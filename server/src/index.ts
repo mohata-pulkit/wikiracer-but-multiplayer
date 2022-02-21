@@ -1,5 +1,4 @@
 import { createServer } from "http";
-import { WebSocketServer } from "ws";
 import express from "express";
 import { ___prod___ } from "./constants";
 import { ApolloServer } from "apollo-server-express";
@@ -10,8 +9,9 @@ import { MikroORM } from "@mikro-orm/core";
 import mikroOrmConfig from "./mikro-orm.config";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import LobbyResolver from "./resolvers/lobby";
-import { useServer } from "graphql-ws/lib/use/ws";
+import { SubscriptionServer } from "subscriptions-transport-ws";
 import cors from "cors";
+import { execute, subscribe } from "graphql";
 
 const main = async () => {
 	const schema = await buildSchema({
@@ -25,6 +25,18 @@ const main = async () => {
 	const app = express();
 
 	const httpServer = createServer(app);
+
+	const subscriptionServer = SubscriptionServer.create(
+		{
+			schema,
+			execute,
+			subscribe,
+		},
+		{
+			server: httpServer,
+			path: "/graphql",
+		}
+	);
 
 	app.use(
 		cors({
@@ -43,20 +55,25 @@ const main = async () => {
 			};
 			return context;
 		},
-		plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+		plugins: [
+			ApolloServerPluginLandingPageGraphQLPlayground(),
+			{
+				async serverWillStart() {
+					return {
+						async drainServer() {
+							subscriptionServer.close();
+						},
+					};
+				},
+			},
+		],
 	});
 
 	await apolloServer.start();
 	apolloServer.applyMiddleware({ app, cors: false });
 
-	const server = httpServer.listen(4000, () => {
-		const wsServer = new WebSocketServer({
-			server,
-			path: "/graphql",
-		});
-
-		useServer({ schema }, wsServer);
-		console.log("server started on http://localhost:4000");
+	httpServer.listen(4000, () => {
+		console.log(`Server is now running on http://localhost:4000/graphql`);
 	});
 };
 
