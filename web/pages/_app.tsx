@@ -8,12 +8,12 @@ import { split, HttpLink } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import ws from "ws";
 
-const token = getCookie("accessToken");
-
 const httpLink = new HttpLink({
 	uri: "http://localhost:4000/graphql",
 	headers: {
-		authorization: token ? `Bearer ${token}` : "",
+		authorization: getCookie("accessToken")
+			? `Bearer ${getCookie("accessToken")}`
+			: "",
 	},
 });
 
@@ -38,11 +38,14 @@ const splitLink = split(
 );
 
 const client = new ApolloClient({
-	ssrMode: false,
+	ssrMode: true,
 	link: splitLink,
-	cache: new InMemoryCache(),
+	credentials: "include",
+	cache: new InMemoryCache({ resultCaching: false }),
 	headers: {
-		authorization: token ? `Bearer ${token}` : "",
+		authorization: getCookie("accessToken")
+			? `Bearer ${getCookie("accessToken")}`
+			: "",
 	},
 });
 

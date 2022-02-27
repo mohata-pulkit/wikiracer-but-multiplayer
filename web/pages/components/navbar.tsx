@@ -10,15 +10,15 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 const Navbar: NextPage = () => {
 	const { data } = useUserFromTokenQuery();
 	const [menu, setMenu] = useState(false);
-	const [darkMode, setDarkMode] = useState(getCookie("darkMode"));
+	const [lightMode, setLightMode] = useState(getCookie("lightMode"));
 
 	useEffect(() => {
-		if (darkMode) {
-			document.documentElement.classList.add("dark");
-			setCookies("darkMode", darkMode);
-		} else {
+		if (lightMode) {
 			document.documentElement.classList.remove("dark");
-			setCookies("darkMode", darkMode);
+			setCookies("lightMode", lightMode);
+		} else {
+			document.documentElement.classList.add("dark");
+			setCookies("lightMode", lightMode);
 		}
 	});
 
@@ -61,15 +61,15 @@ const Navbar: NextPage = () => {
 				<div className="flex flex-col gap-4 z-10 absolute right-0 p-2 bg-amber-200-accent dark:bg-amber-400-accent text-grey-900">
 					<div className="flex flex-row gap-2 p-2 bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 rounded-md">
 						<div>Dark Mode</div>
-						{darkMode ? (
-							<MoonIcon
-								className="h-6 w-6 cursor-pointer"
-								onClick={() => setDarkMode(!darkMode)}
-							/>
-						) : (
+						{lightMode ? (
 							<SunIcon
 								className="h-6 w-6 cursor-pointer"
-								onClick={() => setDarkMode(!darkMode)}
+								onClick={() => setLightMode(!lightMode)}
+							/>
+						) : (
+							<MoonIcon
+								className="h-6 w-6 cursor-pointer"
+								onClick={() => setLightMode(!lightMode)}
 							/>
 						)}
 					</div>

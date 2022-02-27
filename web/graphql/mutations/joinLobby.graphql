@@ -1,5 +1,13 @@
 mutation joinLobby($lobbyID: String!) {
 	joinLobby(uuid: $lobbyID) {
+		lobby {
+			uuid
+			createdAt
+			users
+			startArticle
+			endArticle
+			options
+		}
 		accesstoken
 		error
 	}

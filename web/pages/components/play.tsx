@@ -170,7 +170,20 @@ const Play: NextPage = () => {
 					<Formik
 						initialValues={{ error: "" }}
 						onSubmit={async ({}, { setErrors }) => {
-							const response = await createLobby();
+							const response = await createLobby({
+								update: (cache, { data }) => {
+									cache.writeQuery<graphql.LobbyFromTokenQuery>(
+										{
+											query: graphql.LobbyFromTokenDocument,
+											data: {
+												__typename: "Query",
+												lobbyFromToken:
+													data?.createLobby.lobby,
+											},
+										}
+									);
+								},
+							});
 							if (response.data?.createLobby?.error) {
 								setErrors({
 									error: response.data.createLobby.error,
@@ -180,7 +193,9 @@ const Play: NextPage = () => {
 									"accessToken",
 									response.data?.createLobby?.accesstoken
 								);
-								router.push("/");
+								router.push("/lobby").then(() => {
+									router.reload();
+								});
 							}
 						}}
 					>
@@ -213,6 +228,18 @@ const Play: NextPage = () => {
 						onSubmit={async (values, { setErrors }) => {
 							const response = await joinLobby({
 								variables: values,
+								update: (cache, { data }) => {
+									cache.writeQuery<graphql.LobbyFromTokenQuery>(
+										{
+											query: graphql.LobbyFromTokenDocument,
+											data: {
+												__typename: "Query",
+												lobbyFromToken:
+													data?.joinLobby.lobby,
+											},
+										}
+									);
+								},
 							});
 							if (response.data?.joinLobby?.error) {
 								setErrors({
@@ -223,7 +250,9 @@ const Play: NextPage = () => {
 									"accessToken",
 									response.data?.joinLobby?.accesstoken
 								);
-								router.push("/");
+								router.push("/lobby").then(() => {
+									router.reload();
+								});
 							}
 						}}
 					>

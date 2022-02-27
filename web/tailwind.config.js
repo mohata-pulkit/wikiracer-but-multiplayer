@@ -12,9 +12,9 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				sans: ["Fira Sans"],
-				serif: ["Zilla Slab"],
+				serif: ["Roboto Slab"],
 				mono: ["Fira Code"],
-				display: ["Zilla Slab"],
+				display: ["Roboto Slab"],
 				body: ["Fira Sans"],
 			},
 			colors: {

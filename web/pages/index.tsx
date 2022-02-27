@@ -8,6 +8,13 @@ import Image from "next/image";
 import Play from "./components/play";
 
 const Home: NextPage = () => {
+	function SafeHydrate({ children }: any) {
+		return (
+			<div suppressHydrationWarning>
+				{typeof window === "undefined" ? null : children}
+			</div>
+		);
+	}
 	return (
 		<div className="flex flex-col items-center gap-4">
 			<div className="w-full md:w-1/3 relative justify-center text-center align-middle">
@@ -86,7 +93,9 @@ const Home: NextPage = () => {
 						</p>
 					</div>
 				</div>
-				<Play />
+				<SafeHydrate>
+					<Play />
+				</SafeHydrate>
 			</div>
 		</div>
 	);

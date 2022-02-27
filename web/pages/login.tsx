@@ -22,6 +22,15 @@ const Login: NextPage = () => {
 							password: values.password,
 						},
 					},
+					update: (cache, { data }) => {
+						cache.writeQuery<graphql.UserFromTokenQuery>({
+							query: graphql.UserFromTokenDocument,
+							data: {
+								__typename: "Query",
+								userFromToken: data?.loginUser?.user,
+							},
+						});
+					},
 				});
 				if (response.data?.loginUser?.errors) {
 					setErrors(toErrorMap(response.data.loginUser.errors));
@@ -30,7 +39,9 @@ const Login: NextPage = () => {
 						"accessToken",
 						response.data?.loginUser?.accesstoken
 					);
-					router.push("/");
+					router.push("/").then(() => {
+						router.reload();
+					});
 				}
 			}}
 		>

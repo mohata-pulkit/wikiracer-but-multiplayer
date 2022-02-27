@@ -5,6 +5,7 @@ class MyDocument extends Document {
 		return (
 			<Html>
 				<Head>
+					<link rel="stylesheet" href="wikipedia.css" />
 					<link
 						rel="apple-touch-icon"
 						sizes="180x180"
@@ -36,7 +37,7 @@ class MyDocument extends Document {
 						rel="stylesheet"
 					></link>
 					<link
-						href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Zilla+Slab:wght@300;400;500;900&display=swap"
+						href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Roboto+Slab:wght@300;400;500;900&display=swap"
 						rel="stylesheet"
 					></link>
 				</Head>

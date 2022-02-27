@@ -15,7 +15,18 @@ const Register: NextPage = () => {
 		<Formik
 			initialValues={{ username: "", password: "", email: "" }}
 			onSubmit={async (values, { setErrors }) => {
-				const response = await createUser({ variables: values });
+				const response = await createUser({
+					variables: values,
+					update: (cache, { data }) => {
+						cache.writeQuery<graphql.UserFromTokenQuery>({
+							query: graphql.UserFromTokenDocument,
+							data: {
+								__typename: "Query",
+								userFromToken: data?.createUser?.user,
+							},
+						});
+					},
+				});
 				if (response.data?.createUser?.errors) {
 					setErrors(toErrorMap(response.data.createUser.errors));
 				} else {
@@ -23,7 +34,9 @@ const Register: NextPage = () => {
 						"accessToken",
 						response.data?.createUser?.accesstoken
 					);
-					router.push("/");
+					router.push("/").then(() => {
+						router.reload();
+					});
 				}
 			}}
 		>

@@ -1,0 +1,22 @@
+mutation startGame(
+	$options: [String!]!
+	$endArticle: String!
+	$startArticle: String!
+) {
+	startGame(
+		options: $options
+		endArticle: $endArticle
+		startArticle: $startArticle
+	) {
+		lobby {
+			uuid
+			createdAt
+			users
+			startArticle
+			endArticle
+			options
+		}
+		accesstoken
+		error
+	}
+}

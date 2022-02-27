@@ -20,15 +20,15 @@ export class Lobby {
 	@Property({ type: "text[]" })
 	users: string[];
 
-	@Field(() => String)
+	@Field(() => String, { nullable: true })
 	@Property({ type: "text", nullable: true })
-	startArticle: string;
+	startArticle: string | null;
 
-	@Field(() => String)
+	@Field(() => String, { nullable: true })
 	@Property({ type: "text", nullable: true })
-	endArticle: string;
+	endArticle: string | null;
 
-	@Field(() => [String])
+	@Field(() => [String], { nullable: true })
 	@Property({ type: "text[]", nullable: true })
-	options: string[];
+	options: string[] | null;
 }

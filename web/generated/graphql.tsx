@@ -30,9 +30,9 @@ export type FieldError = {
 export type Lobby = {
   __typename?: 'Lobby';
   createdAt: Scalars['String'];
-  endArticle: Scalars['String'];
-  options: Array<Scalars['String']>;
-  startArticle: Scalars['String'];
+  endArticle?: Maybe<Scalars['String']>;
+  options?: Maybe<Array<Scalars['String']>>;
+  startArticle?: Maybe<Scalars['String']>;
   users: Array<Scalars['String']>;
   uuid: Scalars['String'];
 };
@@ -41,6 +41,7 @@ export type LobbyResponse = {
   __typename?: 'LobbyResponse';
   accesstoken?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
+  lobby?: Maybe<Lobby>;
 };
 
 export type LoginResponse = {
@@ -57,6 +58,7 @@ export type Mutation = {
   editUser?: Maybe<LoginResponse>;
   joinLobby: LobbyResponse;
   loginUser?: Maybe<LoginResponse>;
+  startGame: LobbyResponse;
 };
 
 
@@ -77,6 +79,13 @@ export type MutationJoinLobbyArgs = {
 
 export type MutationLoginUserArgs = {
   options: LoginUserInput;
+};
+
+
+export type MutationStartGameArgs = {
+  endArticle: Scalars['String'];
+  options: Array<Scalars['String']>;
+  startArticle: Scalars['String'];
 };
 
 export type Query = {
@@ -107,7 +116,7 @@ export type Subscription = {
 
 
 export type SubscriptionLobbySubscriptionArgs = {
-  lobbyUuid?: InputMaybe<Scalars['String']>;
+  lobbyUuid: Scalars['String'];
 };
 
 export type User = {
@@ -139,7 +148,7 @@ export type LoginUserInput = {
 export type CreateLobbyMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateLobbyMutation = { __typename?: 'Mutation', createLobby: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null } };
+export type CreateLobbyMutation = { __typename?: 'Mutation', createLobby: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null, lobby?: { __typename?: 'Lobby', uuid: string, createdAt: string, users: Array<string>, startArticle?: string | null, endArticle?: string | null, options?: Array<string> | null } | null } };
 
 export type EditUserMutationVariables = Exact<{
   username: Scalars['String'];
@@ -155,7 +164,7 @@ export type JoinLobbyMutationVariables = Exact<{
 }>;
 
 
-export type JoinLobbyMutation = { __typename?: 'Mutation', joinLobby: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null } };
+export type JoinLobbyMutation = { __typename?: 'Mutation', joinLobby: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null, lobby?: { __typename?: 'Lobby', uuid: string, createdAt: string, users: Array<string>, startArticle?: string | null, endArticle?: string | null, options?: Array<string> | null } | null } };
 
 export type LoginUserMutationVariables = Exact<{
   options: LoginUserInput;
@@ -173,10 +182,19 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'LoginResponse', accesstoken?: string | null, user?: { __typename?: 'User', uuid: string, username: string, email: string, elo: number } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } | null };
 
+export type StartGameMutationVariables = Exact<{
+  options: Array<Scalars['String']> | Scalars['String'];
+  endArticle: Scalars['String'];
+  startArticle: Scalars['String'];
+}>;
+
+
+export type StartGameMutation = { __typename?: 'Mutation', startGame: { __typename?: 'LobbyResponse', accesstoken?: string | null, error?: string | null, lobby?: { __typename?: 'Lobby', uuid: string, createdAt: string, users: Array<string>, startArticle?: string | null, endArticle?: string | null, options?: Array<string> | null } | null } };
+
 export type LobbyFromTokenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LobbyFromTokenQuery = { __typename?: 'Query', lobbyFromToken?: { __typename?: 'Lobby', uuid: string, users: Array<string> } | null };
+export type LobbyFromTokenQuery = { __typename?: 'Query', lobbyFromToken?: { __typename?: 'Lobby', uuid: string, users: Array<string>, startArticle?: string | null, endArticle?: string | null, options?: Array<string> | null } | null };
 
 export type UserQueryVariables = Exact<{
   userUuid: Scalars['String'];
@@ -201,6 +219,14 @@ export type LobbySubscription = { __typename?: 'Subscription', lobbySubscription
 export const CreateLobbyDocument = gql`
     mutation createLobby {
   createLobby {
+    lobby {
+      uuid
+      createdAt
+      users
+      startArticle
+      endArticle
+      options
+    }
     accesstoken
     error
   }
@@ -279,6 +305,14 @@ export type EditUserMutationOptions = Apollo.BaseMutationOptions<EditUserMutatio
 export const JoinLobbyDocument = gql`
     mutation joinLobby($lobbyID: String!) {
   joinLobby(uuid: $lobbyID) {
+    lobby {
+      uuid
+      createdAt
+      users
+      startArticle
+      endArticle
+      options
+    }
     accesstoken
     error
   }
@@ -398,11 +432,62 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const StartGameDocument = gql`
+    mutation startGame($options: [String!]!, $endArticle: String!, $startArticle: String!) {
+  startGame(
+    options: $options
+    endArticle: $endArticle
+    startArticle: $startArticle
+  ) {
+    lobby {
+      uuid
+      createdAt
+      users
+      startArticle
+      endArticle
+      options
+    }
+    accesstoken
+    error
+  }
+}
+    `;
+export type StartGameMutationFn = Apollo.MutationFunction<StartGameMutation, StartGameMutationVariables>;
+
+/**
+ * __useStartGameMutation__
+ *
+ * To run a mutation, you first call `useStartGameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartGameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startGameMutation, { data, loading, error }] = useStartGameMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *      endArticle: // value for 'endArticle'
+ *      startArticle: // value for 'startArticle'
+ *   },
+ * });
+ */
+export function useStartGameMutation(baseOptions?: Apollo.MutationHookOptions<StartGameMutation, StartGameMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StartGameMutation, StartGameMutationVariables>(StartGameDocument, options);
+      }
+export type StartGameMutationHookResult = ReturnType<typeof useStartGameMutation>;
+export type StartGameMutationResult = Apollo.MutationResult<StartGameMutation>;
+export type StartGameMutationOptions = Apollo.BaseMutationOptions<StartGameMutation, StartGameMutationVariables>;
 export const LobbyFromTokenDocument = gql`
     query lobbyFromToken {
   lobbyFromToken {
     uuid
     users
+    startArticle
+    endArticle
+    options
   }
 }
     `;
