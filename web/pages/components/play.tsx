@@ -246,9 +246,11 @@ const Play: NextPage = () => {
 									lobbyID: response.data.joinLobby.error,
 								});
 							} else {
-								setCookies(
+								localStorage.setItem(
 									"accessToken",
 									response.data?.joinLobby?.accesstoken
+										? response.data.joinLobby.accesstoken
+										: ""
 								);
 								router.push("/lobby");
 							}

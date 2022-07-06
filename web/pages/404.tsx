@@ -4,11 +4,10 @@ export default function Custom404() {
 	return (
 		<div className=" flex flex-col gap-4 m-8 align-middle items-center justify-center">
 			<div className="w-full md:w-1/2 lg:w-1/3 h-auto relative">
-				<Image
+				<img
 					src={"/hal_orange.png"}
 					height={100}
 					width={100}
-					layout={"responsive"}
 				/>
 			</div>
 			<div className="flex flex-col align-middle items-center justify-center p-4 gap-2">

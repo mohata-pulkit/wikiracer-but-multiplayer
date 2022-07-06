@@ -116,7 +116,7 @@ const Lobby: NextPage = () => {
 							className="flex flex-col gap-2 justify-center text-center align-middle bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 p-4 rounded-md border-2 border-grey-900 dark:border-grey-100"
 						>
 							<div className="w-full h-auto">
-								<Image
+								<img
 									src={
 										"/userImage/cat-walking-" +
 										gifAssigner(
@@ -124,9 +124,8 @@ const Lobby: NextPage = () => {
 										) +
 										".gif"
 									}
-									height={18}
-									width={24}
-									layout={"responsive"}
+									height={180}
+									width={240}
 								/>
 							</div>
 							<div className="text-2xl font-serif font-bold">

@@ -170,7 +170,9 @@ export default class LobbyResolver {
 
 						var authtoken = new AuthToken();
 						authtoken.uuidUser = uuidUser;
-						authtoken.uuidLobby = lobby?.uuid;
+						authtoken.uuidLobby = uuid;
+
+						console.log(authtoken);
 
 						removeEmptyEntries(context);
 
@@ -194,6 +196,9 @@ export default class LobbyResolver {
 				error = "bruh login before joining a lobby 🤦";
 			}
 		}
+
+		console.log(response);
+
 		return {
 			lobby: finalLobby,
 			accesstoken: response,

@@ -18,11 +18,10 @@ const Home: NextPage = () => {
 	return (
 		<div className="flex flex-col items-center gap-4">
 			<div className="w-full md:w-1/3 relative justify-center text-center align-middle">
-				<Image
+				<img
 					src="/wikicat.png"
 					height="480"
 					width="480"
-					layout="responsive"
 				/>
 			</div>
 			<div>
