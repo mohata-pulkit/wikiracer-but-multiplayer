@@ -13,5 +13,5 @@ export default {
 	dbName: "wikiracer",
 	type: "postgresql",
 	debug: !___prod___,
-	password: "admin",
+	password: "181203",
 } as Parameters<typeof MikroORM.init>[0];

@@ -210,6 +210,7 @@ export default class LobbyResolver {
 	@Mutation(() => LobbyResponse)
 	@UseMiddleware(isAuth)
 	async startGame(
+		@PubSub() pubSub: PubSubEngine,
 		@Arg("startArticle", () => String) startArticle: string,
 		@Arg("endArticle", () => String) endArticle: string,
 		@Arg("options", () => [String]) options: string[],
@@ -241,17 +242,23 @@ export default class LobbyResolver {
 								.replaceAll('"', "")
 								.split(", ");
 							var rand1 = rand.range(randomList.length);
-							var article = randomList[rand1];
-							console.log(randomList.length);
-							console.log(article);
-							lobby.startArticle = article;
+							var article1 = randomList[rand1];
+							var rand2 = rand.range(randomList.length);
+							var article2 = randomList[rand2];
+							lobby.startArticle = article1;
+							lobby.endArticle = article2;
+							lobby.options = options;
 						} else {
 							lobby.startArticle = startArticle;
 							lobby.endArticle = endArticle;
 							lobby.options = options;
 						}
 
+						lobby.users.push("started");
+
 						context.em.persistAndFlush(lobby);
+
+						pubSub.publish(lobby.uuid, lobby);
 
 						var authtoken = new AuthToken();
 						authtoken.uuidUser = uuidUser;

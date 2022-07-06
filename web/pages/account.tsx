@@ -1,4 +1,3 @@
-import { setCookies } from "cookies-next";
 import { Field, Form, Formik } from "formik";
 import * as graphql from "../generated/graphql";
 import { NextPage } from "next";
@@ -28,9 +27,11 @@ export const account: NextPage = () => {
 				if (response.data?.editUser?.errors) {
 					setErrors(toErrorMap(response.data.editUser.errors));
 				} else {
-					setCookies(
+					localStorage.setItem(
 						"accessToken",
-						response.data?.editUser?.accesstoken
+						response?.data?.editUser?.accesstoken
+							? response.data.editUser.accesstoken
+							: ""
 					);
 					router.push("/");
 				}

@@ -7,7 +7,6 @@ import * as graphql from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { createUrqlWSClient } from "../utils/createUrqlWSClient";
 import { Field, Form, Formik } from "formik";
-import { setCookies } from "cookies-next";
 import router from "next/router";
 import { toErrorMap } from "../utils/toErrorMap";
 
@@ -36,6 +35,8 @@ const Lobby: NextPage = () => {
 
 	var members = Array<string>(10);
 	members.fill(" ", 0, 10);
+
+	console.log(members);
 
 	lobby?.lobbyFromToken?.users.forEach((member) => {
 		members.shift();
@@ -106,33 +107,37 @@ const Lobby: NextPage = () => {
 
 		const users = usersState.map((member) => {
 			if (member !== " ") {
-				return (
-					<div
-						key={user(member).data?.user?.user?.uuid}
-						className="flex flex-col gap-2 justify-center text-center align-middle bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 p-4 rounded-md border-2 border-grey-900 dark:border-grey-100"
-					>
-						<div className="w-full h-auto">
-							<Image
-								src={
-									"/userImage/cat-walking-" +
-									gifAssigner(
-										user(member).data?.user?.user?.uuid
-									) +
-									".gif"
-								}
-								height={18}
-								width={24}
-								layout={"responsive"}
-							/>
+				if (member === "started") {
+					router.push("/race");
+				} else {
+					return (
+						<div
+							key={user(member).data?.user?.user?.uuid}
+							className="flex flex-col gap-2 justify-center text-center align-middle bg-grey-100 dark:bg-grey-900 text-grey-900 dark:text-grey-100 p-4 rounded-md border-2 border-grey-900 dark:border-grey-100"
+						>
+							<div className="w-full h-auto">
+								<Image
+									src={
+										"/userImage/cat-walking-" +
+										gifAssigner(
+											user(member).data?.user?.user?.uuid
+										) +
+										".gif"
+									}
+									height={18}
+									width={24}
+									layout={"responsive"}
+								/>
+							</div>
+							<div className="text-2xl font-serif font-bold">
+								{user(member).data?.user?.user?.username}
+							</div>
+							<div className="text-sm font-serif">
+								{user(member).data?.user?.user?.elo}
+							</div>
 						</div>
-						<div className="text-2xl font-serif font-bold">
-							{user(member).data?.user?.user?.username}
-						</div>
-						<div className="text-sm font-serif">
-							{user(member).data?.user?.user?.elo}
-						</div>
-					</div>
-				);
+					);
+				}
 			} else {
 				return <div key={Math.random()}></div>;
 			}
@@ -209,9 +214,11 @@ const Lobby: NextPage = () => {
 									randomList: response.data.startGame.error,
 								});
 							} else {
-								setCookies(
+								localStorage.setItem(
 									"accessToken",
 									response.data?.startGame?.accesstoken
+										? response.data.startGame.accesstoken
+										: ""
 								);
 								router.push("/race");
 							}

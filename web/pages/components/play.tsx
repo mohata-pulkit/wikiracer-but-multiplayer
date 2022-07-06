@@ -189,13 +189,13 @@ const Play: NextPage = () => {
 									error: response.data.createLobby.error,
 								});
 							} else {
-								setCookies(
+								localStorage.setItem(
 									"accessToken",
 									response.data?.createLobby?.accesstoken
+										? response.data.createLobby.accesstoken
+										: ""
 								);
-								router.push("/lobby").then(() => {
-									router.reload();
-								});
+								router.push("/lobby");
 							}
 						}}
 					>
@@ -250,9 +250,7 @@ const Play: NextPage = () => {
 									"accessToken",
 									response.data?.joinLobby?.accesstoken
 								);
-								router.push("/lobby").then(() => {
-									router.reload();
-								});
+								router.push("/lobby");
 							}
 						}}
 					>

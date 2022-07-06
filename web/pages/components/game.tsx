@@ -27,7 +27,7 @@ const Game: React.FC = () => {
 		},
 		replace: (domNode) => {
 			if (domNode instanceof Element && domNode.attribs) {
-				if (options[1] === "true") {
+				if (options[1] == "true") {
 					if (
 						domNode.attribs.class !== "mw-parser-output" &&
 						domNode.name !== "p" &&

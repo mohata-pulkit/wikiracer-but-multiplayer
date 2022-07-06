@@ -3,22 +3,27 @@ import Link from "next/link";
 import { AdjustmentsIcon, MoonIcon, SunIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
 import { useUserFromTokenQuery } from "../../generated/graphql";
-import { getCookie, setCookies } from "cookies-next";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const Navbar: NextPage = () => {
 	const { data } = useUserFromTokenQuery();
 	const [menu, setMenu] = useState(false);
-	const [lightMode, setLightMode] = useState(getCookie("lightMode"));
+	const [lightMode, setLightMode] = useState(
+		localStorage.getItem("lightMode")
+	);
 
 	useEffect(() => {
-		if (lightMode) {
-			document.documentElement.classList.remove("dark");
-			setCookies("lightMode", lightMode);
+		if (lightMode !== null) {
+			if (lightMode === "true") {
+				document.documentElement.classList.remove("dark");
+				localStorage.setItem("lightMode", lightMode);
+			} else {
+				document.documentElement.classList.add("dark");
+				localStorage.setItem("lightMode", lightMode);
+			}
 		} else {
 			document.documentElement.classList.add("dark");
-			setCookies("lightMode", lightMode);
 		}
 	});
 

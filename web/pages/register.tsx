@@ -2,7 +2,6 @@ import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as graphql from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
-import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
@@ -30,9 +29,11 @@ const Register: NextPage = () => {
 				if (response.data?.createUser?.errors) {
 					setErrors(toErrorMap(response.data.createUser.errors));
 				} else {
-					setCookies(
+					localStorage.setItem(
 						"accessToken",
 						response.data?.createUser?.accesstoken
+							? response.data.createUser.accesstoken
+							: ""
 					);
 					router.push("/").then(() => {
 						router.reload();

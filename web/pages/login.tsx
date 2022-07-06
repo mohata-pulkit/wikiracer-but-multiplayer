@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as graphql from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
-import { setCookies } from "cookies-next";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
@@ -35,13 +34,13 @@ const Login: NextPage = () => {
 				if (response.data?.loginUser?.errors) {
 					setErrors(toErrorMap(response.data.loginUser.errors));
 				} else {
-					setCookies(
+					localStorage.setItem(
 						"accessToken",
 						response.data?.loginUser?.accesstoken
+							? response.data.loginUser.accesstoken
+							: ""
 					);
-					router.push("/").then(() => {
-						router.reload();
-					});
+					router.push("/");
 				}
 			}}
 		>
