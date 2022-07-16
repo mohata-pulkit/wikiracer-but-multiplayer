@@ -6,8 +6,8 @@ export default function Custom404() {
 			<div className="w-full md:w-1/2 lg:w-1/3 h-auto relative">
 				<img
 					src={"/hal_orange.png"}
-					height={100}
-					width={100}
+					height={500}
+					width={500}
 				/>
 			</div>
 			<div className="flex flex-col align-middle items-center justify-center p-4 gap-2">
